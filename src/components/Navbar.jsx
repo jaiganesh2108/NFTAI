@@ -15,6 +15,7 @@ const Navbar = () => {
       <div className="navbar-container">
         <Link to="/" className="navbar-logo">AIChain</Link>
         <div className="navbar-links">
+          <Link to="/" className="navbar-link">Home</Link>
           <Link to="/marketplace" className="navbar-link">Marketplace</Link>
           <Link to="/upload" className="navbar-link">Upload</Link>
           <Link to="/dashboard" className="navbar-link">Dashboard</Link>
@@ -22,7 +23,7 @@ const Navbar = () => {
             variant={isWalletConnected ? "disconnect" : "secondary"}
             onClick={handleWalletClick}
           >
-            {isWalletConnected ? "Disconnect" : "Connect Wallet"}
+            {isWalletConnected ? "Disconnect Wallet" : "Connect Wallet"}
           </Button>
         </div>
       </div>
