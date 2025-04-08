@@ -26,7 +26,7 @@ const Navbar = () => {
       alert("Please install Metamask");
     }
   };
-
+  
   const disconnectWallet = () => {
     try {
       setProvider(null);
