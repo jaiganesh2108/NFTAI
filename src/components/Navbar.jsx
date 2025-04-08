@@ -8,7 +8,7 @@ const Navbar = () => {
   const [signer, setSigner] = useState(null);
   const [provider, setProvider] = useState(null);
   const [account, setAccount] = useState(null);
-
+  
   const connectWallet = async () => {
     try {
       const provider = new ethers.BrowserProvider(window.ethereum);
