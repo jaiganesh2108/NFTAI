@@ -84,14 +84,7 @@ const Marketplace = () => {
       <header className="marketplace-header">
         <div className="header-content">
           <h1>AI Model Marketplace</h1>
-          <button 
-            className={`connect-wallet ${isWalletConnected ? 'connected' : ''} ${isLoading ? 'loading' : ''}`} 
-            onClick={connectWallet}
-            aria-label={isWalletConnected ? "Disconnect Wallet" : "Connect Wallet"}
-          >
-            <Wallet className="mr-2 h-5 w-5" />
-            {isLoading ? 'Connecting...' : (isWalletConnected ? 'Disconnect' : 'Connect Wallet')}
-          </button>
+          
         </div>
         <div className="search-container">
           <Search className="search-icon" />
