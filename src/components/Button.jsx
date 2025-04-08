@@ -1,11 +1,24 @@
 import React from 'react';
-import '../styles/components.css';
 
-const Button = ({ children, onClick, variant = 'primary' }) => {
+const Button = ({ variant = 'primary', children, onClick, ...props }) => {
+  const getVariantClass = () => {
+    switch (variant) {
+      case 'primary':
+        return 'btn-primary';
+      case 'secondary':
+        return 'btn-secondary';
+      case 'disconnect':
+        return 'btn-disconnect';
+      default:
+        return 'btn-primary';
+    }
+  };
+
   return (
-    <button
-      className={`btn ${variant === 'primary' ? 'btn-primary' : 'btn-secondary'}`}
+    <button 
+      className={`btn ${getVariantClass()}`}
       onClick={onClick}
+      {...props}
     >
       {children}
     </button>

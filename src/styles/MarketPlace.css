@@ -9,6 +9,7 @@
   --color-accent-secondary: #566bff;
   --color-success: #4caf50;
   --color-warning: #ff9800;
+  --color-error: #fc0303;
   --gradient-primary: linear-gradient(to right, #8368ff, #566bff);
   --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.5);
   --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.5);
