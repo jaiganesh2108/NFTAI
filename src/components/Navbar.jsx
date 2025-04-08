@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Button from './Button';
-import { ethers ,Contract} from "ethers"
+import {BrowserProvider, ethers ,Contract} from "ethers"
 import '../styles/components.css';
 
 const Navbar = () => {
@@ -13,10 +13,9 @@ const Navbar = () => {
   /*const contractAddress=""
   const contractAbi=[]*/
 
-
     const connectWallet=async()=>{
       try{
-        const provider=new ethers.BrowserPrivider(window.ethereum)
+        const provider=new ethers.BrowserProvider(window.ethereum)
         setprovider(provider)
 
         const signer=await provider.getSigner();
@@ -37,7 +36,17 @@ const Navbar = () => {
         alert("Please install metamsk")
     }
     }
-
+    const Disconnect=()=>{
+      try{
+      setprovider(null)
+      setSigner(null)
+      setAccount(null)
+      console.log("disconnected")
+      }
+      catch(err){
+        console.log("not dissconected",err)
+      }
+    }
   return (
     <nav className="navbar">
       <div className="navbar-container">
@@ -47,6 +56,8 @@ const Navbar = () => {
           <Link to="/upload" className="navbar-link">Upload</Link>
           <Link to="/dashboard" className="navbar-link">Dashboard</Link>
           <Button variant="secondary" onClick={connectWallet}>Connect Wallet</Button>
+          <Button variant="secondary" onClick={Disconnect}>disConnect Wallet</Button>
+          
         </div>
       </div>
     </nav>
