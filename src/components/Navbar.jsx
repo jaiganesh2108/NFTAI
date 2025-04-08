@@ -1,9 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Button from './Button';
 import '../styles/components.css';
 
 const Navbar = () => {
+  const [isWalletConnected, setIsWalletConnected] = useState(false);
+
+  const handleWalletClick = () => {
+    setIsWalletConnected(!isWalletConnected);
+  };
+
   return (
     <nav className="navbar">
       <div className="navbar-container">
@@ -12,7 +18,12 @@ const Navbar = () => {
           <Link to="/marketplace" className="navbar-link">Marketplace</Link>
           <Link to="/upload" className="navbar-link">Upload</Link>
           <Link to="/dashboard" className="navbar-link">Dashboard</Link>
-          <Button variant="secondary">Connect Wallet</Button>
+          <Button 
+            variant={isWalletConnected ? "disconnect" : "secondary"}
+            onClick={handleWalletClick}
+          >
+            {isWalletConnected ? "Disconnect" : "Connect Wallet"}
+          </Button>
         </div>
       </div>
     </nav>
