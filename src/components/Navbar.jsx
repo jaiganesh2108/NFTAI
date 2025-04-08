@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Button from './Button';
 import { ethers } from 'ethers';
+import { BrowserProvider, ethers } from 'ethers';
 import '../styles/components.css';
 
 const Navbar = () => {
   const [signer, setSigner] = useState(null);
   const [provider, setProvider] = useState(null);
   const [account, setAccount] = useState(null);
-
+  
   const connectWallet = async () => {
     try {
       const provider = new ethers.BrowserProvider(window.ethereum);
@@ -26,7 +27,7 @@ const Navbar = () => {
       alert("Please install Metamask");
     }
   };
-
+  
   const disconnectWallet = () => {
     try {
       setProvider(null);
