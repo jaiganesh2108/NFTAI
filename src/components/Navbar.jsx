@@ -1,17 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Button from './Button';
-<<<<<<< HEAD
-import '../styles/components.css';
-
-const Navbar = () => {
-  const [isWalletConnected, setIsWalletConnected] = useState(false);
-
-  const handleWalletClick = () => {
-    setIsWalletConnected(!isWalletConnected);
-  };
-=======
-import { BrowserProvider, ethers } from 'ethers';
+import { ethers } from 'ethers';
 import '../styles/components.css';
 
 const Navbar = () => {
@@ -24,7 +14,7 @@ const Navbar = () => {
       const provider = new ethers.BrowserProvider(window.ethereum);
       setProvider(provider);
 
-      const signer = await provider.getSigner();
+      const signer = await provider.getSigner(); 
       setSigner(signer);
 
       const address = await signer.getAddress();
@@ -49,7 +39,6 @@ const Navbar = () => {
   };
 
   const isWalletConnected = !!account;
->>>>>>> 53dd81b5e6b1ca4321813c483c6da7d906c791de
 
   return (
     <nav className="navbar">
