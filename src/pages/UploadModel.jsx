@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import Navbar from '../components/Navbar';
 import '../styles/pages.css';
 import '../styles/UploadModel.css';
+import ChatbotButton from '../pages/ChatbotButton';
 
 const Upload = () => {
   const [modelFile, setModelFile] = useState(null);
@@ -264,6 +265,8 @@ const Upload = () => {
           </div>
         </div>
       </div>
+      <ChatbotButton onClick={() => alert('Open chatbot modal here!')} />
+
     </div>
   );
 };

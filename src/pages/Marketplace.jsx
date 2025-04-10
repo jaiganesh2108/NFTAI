@@ -5,7 +5,7 @@ import {
 } from 'lucide-react';
 import Navbar from '../components/Navbar.jsx'; // Import the existing Navbar component
 import "../styles/MarketPlace.css";
-
+import ChatbotButton from '../pages/ChatbotButton.jsx';
 const Marketplace = () => {
   const [models] = useState([
     { id: 1, name: "NeuralText Pro", category: "Text Generation", tags: ["GPT", "Text", "Generative"], description: "Advanced language model for creative writing and content generation with support for multiple languages.", price: 299, previousPrice: 349, rating: 4.8, reviewCount: 256, usageCount: "13.2k", trending: true, new: false, reputation: "High", image: "https://via.placeholder.com/300x200", isNFT: true, blockchain: "Ethereum", owner: "0x1234...abcd" },
@@ -304,6 +304,8 @@ const Marketplace = () => {
           </div>
         </section>
       </main>
+      <ChatbotButton onClick={() => alert('Open chatbot modal here!')} />
+
     </div>
   );
 };
