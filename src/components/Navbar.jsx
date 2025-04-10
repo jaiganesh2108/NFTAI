@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import Button from '../components/Button.jsx';
-import { ethers, BrowserProvider } from 'ethers';
+import Button from './Button';
+import { ethers } from 'ethers';
 import '../styles/components.css';
 
 const Navbar = () => {
