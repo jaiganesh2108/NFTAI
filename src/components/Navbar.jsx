@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Button from './Button';
+import { ethers } from 'ethers';
 import { BrowserProvider, ethers } from 'ethers';
 import '../styles/components.css';
 
@@ -14,7 +15,7 @@ const Navbar = () => {
       const provider = new ethers.BrowserProvider(window.ethereum);
       setProvider(provider);
 
-      const signer = await provider.getSigner();
+      const signer = await provider.getSigner(); 
       setSigner(signer);
 
       const address = await signer.getAddress();

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { 
-  Search, Filter, Star, Users, TrendingUp, Plus, DollarSign, 
-  Clock, BarChart2, ShoppingCart, Play, PlusCircle, Wallet, Lock 
+  Search, Filter, Star, Users, TrendingUp, Plus, 
+  ShoppingCart, Play, PlusCircle, Lock 
 } from 'lucide-react';
+import Navbar from '../components/Navbar.jsx'; // Import the existing Navbar component
 import "../styles/MarketPlace.css";
 
 const Marketplace = () => {
@@ -81,10 +82,13 @@ const Marketplace = () => {
     <div className="marketplace-container">
       <div className="orb orb-1"></div>
       <div className="orb orb-2"></div>
+      
+      {/* Added the imported Navbar component */}
+      <Navbar />
+      
       <header className="marketplace-header">
         <div className="header-content">
           <h1>AI Model Marketplace</h1>
-          
         </div>
         <div className="search-container">
           <Search className="search-icon" />
