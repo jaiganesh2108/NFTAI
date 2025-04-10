@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import Navbar from '../components/Navbar';
+import {ethers} from "ethers"
 import '../styles/pages.css';
 import '../styles/UploadModel.css';
 import ChatbotButton from '../pages/ChatbotButton';
@@ -242,6 +243,204 @@ const Upload = () => {
     }
   };
 
+  // Smart Contract
+const contractAddress = "0xF40613e98Ba82C88E581BBdDaDD5CD072AeDba19";
+const abi = [
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "modelId",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "name",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "ipfsHash",
+				"type": "string"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "uploader",
+				"type": "address"
+			}
+		],
+		"name": "ModelUploaded",
+		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_name",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_description",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_ipfsHash",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_tags",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_category",
+				"type": "string"
+			},
+			{
+				"internalType": "bool",
+				"name": "_isPublic",
+				"type": "bool"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_price",
+				"type": "uint256"
+			}
+		],
+		"name": "uploadModel",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getAllModels",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "description",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "ipfsHash",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "tags",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "category",
+						"type": "string"
+					},
+					{
+						"internalType": "bool",
+						"name": "isPublic",
+						"type": "bool"
+					},
+					{
+						"internalType": "uint256",
+						"name": "price",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "uploader",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "timestamp",
+						"type": "uint256"
+					}
+				],
+				"internalType": "struct AIModelRegistry.Model[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "models",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "name",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "description",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "ipfsHash",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "tags",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "category",
+				"type": "string"
+			},
+			{
+				"internalType": "bool",
+				"name": "isPublic",
+				"type": "bool"
+			},
+			{
+				"internalType": "uint256",
+				"name": "price",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "uploader",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "timestamp",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+] ;
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
@@ -250,12 +449,59 @@ const Upload = () => {
       return;
     }
     
-    setIsUploading(true);
+    if(!modelFile || !modelName || !description){
+      alert("please fill all required fields")
+    }
+    try{
+      // it is  Upload to pinata
+      setIsUploading(true);
+      const formData = new FormData();
+      formData.append("file", modelFile);
+
+      const metadata = JSON.stringify({
+        name: modelName,
+      });
+      formData.append("pinataMetadata", metadata);
+
+      const options = JSON.stringify({
+        cidVersion: 0,
+      });
+      formData.append("pinataOptions", options);
+
+      const res = await axios.post("https://api.pinata.cloud/pinning/pinFileToIPFS", formData, {
+        maxBodyLength: "Infinity",
+        headers: {
+          "Content-Type": `multipart/form-data; boundary=${formData._boundary}`,
+          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiI4ZmEzNjU0Yi0xY2E4LTRlM2UtOTA5Ny00Mzc5YjY4YjY0NjkiLCJlbWFpbCI6ImRpbGxpYmFza2VyMUBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwicGluX3BvbGljeSI6eyJyZWdpb25zIjpbeyJkZXNpcmVkUmVwbGljYXRpb25Db3VudCI6MSwiaWQiOiJGUkExIn0seyJkZXNpcmVkUmVwbGljYXRpb25Db3VudCI6MSwiaWQiOiJOWUMxIn1dLCJ2ZXJzaW9uIjoxfSwibWZhX2VuYWJsZWQiOmZhbHNlLCJzdGF0dXMiOiJBQ1RJVkUifSwiYXV0aGVudGljYXRpb25UeXBlIjoic2NvcGVkS2V5Iiwic2NvcGVkS2V5S2V5IjoiMDJlOGMxYjQyMjIyMzMwZTJhYTciLCJzY29wZWRLZXlTZWNyZXQiOiIyMjY3YjFhZWQ4MjZmM2JhMGFmNWExNjU5YzRmZjRjYThhY2VlMWVmODFlZGExNjZlNzUxM2RkOTg1ZWFhYzQ5IiwiZXhwIjoxNzc1ODE4MTgzfQ.HyD1d7p-AnJnBTnV2ruPV-2TwianjjVnK5YSR9uZC3o`,
+        },
+      });
+  
+      const ipfsHash = res.data.IpfsHash;
+      console.log("Pinata IPFS Hash:", ipfsHash);
+
+         // 2. Connect to Ethereum wallet
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
+      const contract = new ethers.Contract(contractAddress, abi, signer);
+
+      // it is to Format the price (convert to uint256 if needed)
+    const parsedPrice = ethers.parseUnits(price || "0", "ether"); // if using ETH-based token
+
+          // 4. Call smart contract function
+    const tx = await contract.uploadModel(
+      modelName,
+      description,
+      ipfsHash,
+      tags,
+      category,
+      isPublic,
+      parsedPrice
+    );
+    await tx.wait();
+
+    alert("Model uploaded successfully to AIChain!");
     
-    // Simulate upload process
-    setTimeout(() => {
-      setIsUploading(false);
-      // Reset form after successful upload
+      //it is to  Reset form after successfull upload
       alert('Model uploaded successfully!');
       setModelFile(null);
       setModelName('');
@@ -264,7 +510,15 @@ const Upload = () => {
       setCategory('vision');
       setIsPublic(true);
       setPrice('');
-    }, 2000);
+    }
+
+    catch(err){
+      console.error("Upload error:", err);
+      alert("Upload failed: " + err.message);
+    }
+    finally {
+      setIsUploading(false);
+    }
     
     // Here you would normally:
     // 1. Create form data
