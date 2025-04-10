@@ -116,3 +116,207 @@
 .navbar-link:hover {
   color: #a78bfa;
 }
+/* Chatbot Floating Button */
+.chatbot-button {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background-color: #2563eb; /* blue-600 */
+  color: white;
+  padding: 16px;
+  border-radius: 9999px; /* full round */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.chatbot-button:hover {
+  background-color: #1d4ed8; 
+}
+/* components.css */
+.chatbot-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: linear-gradient(135deg, #6b48ff, #00ddeb);
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease;
+  z-index: 1000;
+}
+
+.chatbot-button:hover {
+  transform: scale(1.1);
+}
+
+.chatbot-card {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 400px; /* Increased width */
+  height: 600px; /* Increased height */
+  background: #1a1a2e;
+  border-radius: 20px; /* Larger radius for a softer look */
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5); /* Enhanced shadow for depth */
+  overflow: hidden;
+  animation: slideUp 0.3s ease;
+  z-index: 1000;
+  border: 2px solid #2d2d44;
+  display: flex;
+  flex-direction: column;
+  border-top-left-radius: 0; /* Custom shape for uniqueness */
+}
+
+.chatbot-header {
+  background: linear-gradient(135deg, #6b48ff, #00ddeb);
+  color: #ffffff;
+  padding: 20px; /* Increased padding */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #2d2d44;
+  position: relative;
+  overflow: hidden;
+}
+
+.chatbot-header::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+  animation: glow 10s infinite;
+  z-index: 0;
+}
+
+.chatbot-header h3 {
+  margin: 0;
+  font-size: 22px; /* Larger text */
+  font-weight: 600;
+  position: relative;
+  z-index: 1;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.2s ease, color 0.2s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.close-btn:hover {
+  transform: rotate(90deg);
+  color: #ff6b6b; /* Red highlight on hover */
+}
+
+.chatbot-messages {
+  flex: 1;
+  padding: 20px; /* Increased padding */
+  overflow-y: auto;
+  background: #16213e;
+  color: #e0e0e0;
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Increased gap */
+  background: linear-gradient(to bottom, #16213e, #1a1a2e); /* Subtle gradient */
+}
+
+.message {
+  max-width: 75%; /* Slightly wider messages */
+  padding: 15px; /* Increased padding */
+  border-radius: 15px; /* Larger radius */
+  margin-bottom: 10px;
+  color: #ffffff;
+  word-wrap: break-word;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Added shadow */
+  animation: fadeIn 0.3s ease;
+}
+
+.user-message {
+  background: linear-gradient(135deg, #6b48ff, #8e6bff);
+  align-self: flex-end;
+}
+
+.bot-message {
+  background: linear-gradient(135deg, #3a3a5c, #5a5a7e);
+  align-self: flex-start;
+}
+
+.chatbot-input {
+  width: 100%;
+  padding: 20px; /* Increased padding */
+  background: #1a1a2e;
+  border-top: 2px solid #2d2d44;
+  display: flex;
+  align-items: center;
+}
+
+.chatbot-input input {
+  flex: 1;
+  padding: 12px 18px; /* Increased padding */
+  border: 2px solid #3a3a5c;
+  border-radius: 25px; /* Larger radius */
+  background: #2d2d44;
+  color: #ffffff;
+  font-size: 16px; /* Larger text */
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.chatbot-input input:focus {
+  border-color: #6b48ff;
+}
+
+.chatbot-input input::placeholder {
+  color: #a0a0c0;
+}
+
+.send-btn {
+  background: linear-gradient(135deg, #6b48ff, #00ddeb);
+  color: #ffffff;
+  border: none;
+  padding: 12px 20px; /* Increased padding */
+  border-radius: 25px; /* Larger radius */
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  margin-left: 15px; /* Increased margin */
+  font-size: 16px; /* Larger text */
+}
+
+.send-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(107, 72, 255, 0.5);
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes glow {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

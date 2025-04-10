@@ -10,7 +10,7 @@
   --color-success: #4caf50;
   --color-warning: #ff9800;
   --color-error: #fc0303;
-  --gradient-primary: linear-gradient(to right, #8368ff, #566bff);
+  --gradient-dark: linear-gradient(to right, #0a0a1a, #12122a, #1a1a35);
   --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.5);
   --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.5);
   --glow-purple: 0 0 15px rgba(131, 104, 255, 0.5);
@@ -37,36 +37,42 @@ body {
   border-radius: 50%;
   filter: blur(50px);
   opacity: 0.3;
+  animation: pulse 10s infinite alternate;
 }
 .orb-1 {
   width: 300px;
   height: 300px;
-  background: var(--color-accent-primary);
+  background: radial-gradient(circle, rgba(131, 104, 255, 0.2) 0%, rgba(86, 107, 255, 0.1) 70%);
   top: -100px;
   left: -100px;
 }
 .orb-2 {
   width: 400px;
   height: 400px;
-  background: var(--color-accent-secondary);
+  background: radial-gradient(circle, rgba(86, 107, 255, 0.2) 0%, rgba(26, 26, 53, 0.1) 70%);
   bottom: -150px;
   right: -150px;
 }
 
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 0.3; }
+  100% { transform: scale(1.1); opacity: 0.5; }
+}
+
 /* Header */
 .marketplace-header {
-  background: var(--gradient-primary);
+  background: var(--gradient-dark); /* Replaced purple gradient with dark gradient */
   padding: 2rem;
   box-shadow: var(--shadow-md);
   position: relative;
   z-index: 1;
-  animation: gradientShift 8s ease infinite;
+  animation: darkShift 10s ease infinite; /* Added animation */
 }
 
-@keyframes gradientShift {
-  0% { background: linear-gradient(to right, #8368ff, #566bff); }
-  50% { background: linear-gradient(to right, #566bff, #8368ff); }
-  100% { background: linear-gradient(to right, #8368ff, #566bff); }
+@keyframes darkShift {
+  0% { background: linear-gradient(to right, #0a0a1a, #12122a, #1a1a35); }
+  50% { background: linear-gradient(to right, #12122a, #1a1a35, #0a0a1a); }
+  100% { background: linear-gradient(to right, #0a0a1a, #12122a, #1a1a35); }
 }
 
 .header-content {
@@ -76,7 +82,7 @@ body {
   max-width: 1200px;
   margin: 0 auto;
   padding: 1rem 2rem;
-  background: rgba(10, 10, 26, 0.2);
+  background: rgba(10, 10, 26, 0.3);
   border-radius: 1rem;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(5px);
@@ -85,8 +91,8 @@ body {
 .marketplace-header h1 {
   font-size: 2.5rem;
   font-weight: 700;
-  color: #ffffff; /* Changed to solid white */
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* Added shadow for contrast */
+  color: #ffffff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
   animation: fadeIn 1s ease-in;
 }
 
@@ -312,7 +318,7 @@ body {
 .reset-filters-button {
   width: 100%;
   padding: 0.75rem;
-  background: var(--gradient-primary);
+  background: var(--gradient-dark);
   color: var(--color-text-primary);
   border: none;
   border-radius: 0.5rem;
@@ -354,7 +360,7 @@ body {
 
 .tab.active,
 .tab:hover {
-  background: var(--gradient-primary);
+  background: var(--gradient-dark);
   color: var(--color-text-primary);
   box-shadow: var(--glow-purple);
 }
@@ -416,7 +422,7 @@ body {
 }
 
 .badge.nft {
-  background: var(--gradient-primary);
+  background: var(--gradient-dark);
   color: white;
 }
 
@@ -547,7 +553,7 @@ body {
 }
 
 .buy-button {
-  background: var(--gradient-primary);
+  background: var(--gradient-dark);
 }
 
 .buy-button:hover {
@@ -586,7 +592,7 @@ body {
 }
 
 .clear-filters-button {
-  background: var(--gradient-primary);
+  background: var(--gradient-dark);
   color: white;
   padding: 0.75rem 1.5rem;
   border-radius: 0.5rem;

@@ -315,7 +315,15 @@ const Dashboard = () => {
                         <CartesianGrid stroke="#444" />
                         <XAxis dataKey="name" stroke="#aaa" />
                         <YAxis stroke="#aaa" />
-                        <Tooltip />
+                        <Tooltip
+                          contentStyle={{
+                            backgroundColor: '#1a1a3a',
+                            border: '1px solid #6b48ff',
+                            borderRadius: '10px',
+                            color: '#fff',
+                          }}
+                          itemStyle={{ color: '#fff' }}
+                        />
                         <Line type="monotone" dataKey="uses" stroke="#6b48ff" strokeWidth={2} dot={false} />
                       </LineChart>
                     </ResponsiveContainer>
@@ -327,7 +335,16 @@ const Dashboard = () => {
                         <CartesianGrid stroke="#444" />
                         <XAxis dataKey="name" stroke="#aaa" />
                         <YAxis stroke="#aaa" />
-                        <Tooltip formatter={(value) => [`$${value}`, 'Revenue']} />
+                        <Tooltip
+                          contentStyle={{
+                            backgroundColor: '#1a1a3a',
+                            border: '1px solid #6b48ff',
+                            borderRadius: '10px',
+                            color: '#fff',
+                          }}
+                          itemStyle={{ color: '#fff' }}
+                          formatter={(value) => [`$${value}`, 'Revenue']}
+                        />
                         <Line type="monotone" dataKey="revenue" stroke="#82ca9d" strokeWidth={2} dot={false} />
                       </LineChart>
                     </ResponsiveContainer>
@@ -428,7 +445,16 @@ const Dashboard = () => {
                         <CartesianGrid stroke="#444" />
                         <XAxis dataKey="name" stroke="#aaa" />
                         <YAxis stroke="#aaa" />
-                        <Tooltip formatter={(value) => [`$${value}`, 'Earnings']} />
+                        <Tooltip
+                          contentStyle={{
+                            backgroundColor: '#1a1a3a',
+                            border: '1px solid #6b48ff',
+                            borderRadius: '10px',
+                            color: '#fff',
+                          }}
+                          itemStyle={{ color: '#fff' }}
+                          formatter={(value) => [`$${value}`, 'Earnings']}
+                        />
                         <Line type="monotone" dataKey="revenue" stroke="#82ca9d" strokeWidth={3} dot={{ r: 6 }} activeDot={{ r: 8 }} />
                       </LineChart>
                     </ResponsiveContainer>
@@ -440,7 +466,15 @@ const Dashboard = () => {
                         <CartesianGrid stroke="#444" />
                         <XAxis dataKey="name" stroke="#aaa" />
                         <YAxis stroke="#aaa" />
-                        <Tooltip />
+                        <Tooltip
+                          contentStyle={{
+                            backgroundColor: '#1a1a3a',
+                            border: '1px solid #6b48ff',
+                            borderRadius: '10px',
+                            color: '#fff',
+                          }}
+                          itemStyle={{ color: '#fff' }}
+                        />
                         <Line type="monotone" dataKey="uses" stroke="#6b48ff" strokeWidth={3} dot={{ r: 6 }} activeDot={{ r: 8 }} />
                       </LineChart>
                     </ResponsiveContainer>
@@ -452,7 +486,16 @@ const Dashboard = () => {
                         <CartesianGrid stroke="#444" />
                         <XAxis dataKey="name" stroke="#aaa" />
                         <YAxis stroke="#aaa" />
-                        <Tooltip formatter={(value) => [`${value}%`, 'Percentage']} />
+                        <Tooltip
+                          contentStyle={{
+                            backgroundColor: '#1a1a3a',
+                            border: '1px solid #6b48ff',
+                            borderRadius: '10px',
+                            color: '#fff',
+                          }}
+                          itemStyle={{ color: '#fff' }}
+                          formatter={(value) => [`${value}%`, 'Percentage']}
+                        />
                         <Bar dataKey="value" fill="#a16eff" barSize={30} radius={[10, 10, 0, 0]}>
                           {achievementDistribution.map((entry, index) => (
                             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
@@ -480,7 +523,16 @@ const Dashboard = () => {
                             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                           ))}
                         </Pie>
-                        <Tooltip formatter={(value) => [`${value} Tokens`, 'Amount']} />
+                        <Tooltip
+                          contentStyle={{
+                            backgroundColor: '#1a1a3a',
+                            border: '1px solid #6b48ff',
+                            borderRadius: '10px',
+                            color: '#fff',
+                          }}
+                          itemStyle={{ color: '#fff' }}
+                          formatter={(value) => [`${value} Tokens`, 'Amount']}
+                        />
                       </PieChart>
                     </ResponsiveContainer>
                   </div>
