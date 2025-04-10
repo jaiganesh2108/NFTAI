@@ -13,7 +13,7 @@ const Navbar = () => {
     try {
       const provider = new ethers.BrowserProvider(window.ethereum);
       setProvider(provider);
-
+      
       const signer = await provider.getSigner(); 
       setSigner(signer);
 
