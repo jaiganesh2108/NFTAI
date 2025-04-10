@@ -1,4 +1,12 @@
 import React, { useState } from 'react';
+import image1 from '../assets/images/imgg1.jpg';
+import image3 from '../assets/images/imgg3.jpg';
+import image2 from '../assets/images/imagg2.jpg';
+import image4 from '../assets/images/imagg4.jpg';
+import image5 from '../assets/images/img5.jpg';
+import image6 from '../assets/images/img6.jpg';
+import image13 from '../assets/images/img13.jpg';
+import image12 from '../assets/images/img12.jpg';
 import { 
   Search, Filter, Star, Users, TrendingUp, Plus, 
   ShoppingCart, Play, PlusCircle, Lock 
@@ -8,10 +16,10 @@ import "../styles/MarketPlace.css";
 import ChatbotButton from '../pages/ChatbotButton.jsx';
 const Marketplace = () => {
   const [models] = useState([
-    { id: 1, name: "NeuralText Pro", category: "Text Generation", tags: ["GPT", "Text", "Generative"], description: "Advanced language model for creative writing and content generation with support for multiple languages.", price: 299, previousPrice: 349, rating: 4.8, reviewCount: 256, usageCount: "13.2k", trending: true, new: false, reputation: "High", image: "https://via.placeholder.com/300x200", isNFT: true, blockchain: "Ethereum", owner: "0x1234...abcd" },
-    { id: 2, name: "VisionAI Studio", category: "Image Recognition", tags: ["Vision", "Recognition", "CNN"], description: "State-of-the-art computer vision model for object detection, image classification, and scene understanding.", price: 499, previousPrice: 499, rating: 4.6, reviewCount: 183, usageCount: "8.7k", trending: true, new: true, reputation: "High", image: "https://via.placeholder.com/300x200", isNFT: false },
-    { id: 3, name: "SynthWave Audio", category: "Audio Processing", tags: ["Audio", "Speech", "Generation"], description: "Audio generation and processing system for creating realistic speech, music, and sound effects.", price: 199, previousPrice: 249, rating: 4.3, reviewCount: 127, usageCount: "5.4k", trending: false, new: true, reputation: "Medium", image: "https://via.placeholder.com/300x200", isNFT: true, blockchain: "Polygon", owner: "0x5678...efgh" },
-    { id: 4, name: "DataMiner Pro", category: "Data Analysis", tags: ["Analytics", "Prediction", "ML"], description: "Machine learning model for advanced data analytics, pattern recognition, and predictive modeling.", price: 399, previousPrice: 399, rating: 4.5, reviewCount: 164, usageCount: "7.1k", trending: false, new: false, reputation: "High", image: "https://via.placeholder.com/300x200", isNFT: false },
+    { id: 1, name: "NeuralText Pro", category: "Text Generation", tags: ["GPT", "Text", "Generative"], description: "Advanced language model for creative writing and content generation with support for multiple languages.", price: 299, previousPrice: 349, rating: 4.8, reviewCount: 256, usageCount: "13.2k", trending: true, new: false, reputation: "High", image: image5 , isNFT: true, blockchain: "Ethereum", owner: "0x1234...abcd" },
+    { id: 2, name: "VisionAI Studio", category: "Image Recognition", tags: ["Vision", "Recognition", "CNN"], description: "State-of-the-art computer vision model for object detection, image classification, and scene understanding.", price: 499, previousPrice: 499, rating: 4.6, reviewCount: 183, usageCount: "8.7k", trending: true, new: true, reputation: "High", image: image6, isNFT: false },
+    { id: 3, name: "SynthWave Audio", category: "Audio Processing", tags: ["Audio", "Speech", "Generation"], description: "Audio generation and processing system for creating realistic speech, music, and sound effects.", price: 199, previousPrice: 249, rating: 4.3, reviewCount: 127, usageCount: "5.4k", trending: false, new: true, reputation: "Medium", image: image13, isNFT: true, blockchain: "Polygon", owner: "0x5678...efgh" },
+    { id: 4, name: "DataMiner Pro", category: "Data Analysis", tags: ["Analytics", "Prediction", "ML"], description: "Machine learning model for advanced data analytics, pattern recognition, and predictive modeling.", price: 399, previousPrice: 399, rating: 4.5, reviewCount: 164, usageCount: "7.1k", trending: false, new: false, reputation: "High", image: image12, isNFT: false },
   ]);
 
   const [searchTerm, setSearchTerm] = useState('');

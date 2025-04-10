@@ -9,7 +9,7 @@ const ChatbotButton = () => {
   const [messages, setMessages] = useState([
     { text: 'Hello! How can I assist you today?', sender: 'bot' },
   ]);
-  const messagesEndRef = useRef(null); // Reference to the end of the messages
+  const messagesEndRef = useRef(null);
 
   const toggleChatbot = () => {
     setIsOpen(!isOpen);
@@ -21,11 +21,9 @@ const ChatbotButton = () => {
 
   const handleSendMessage = () => {
     if (message.trim()) {
-      // Add user message
       setMessages([...messages, { text: message, sender: 'user' }]);
       setMessage('');
 
-      // Simulate bot response
       setTimeout(() => {
         setMessages((prevMessages) => [
           ...prevMessages,
@@ -41,7 +39,7 @@ const ChatbotButton = () => {
     }
   };
 
-  // Scroll to the bottom of the messages when new messages are added
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
@@ -75,7 +73,7 @@ const ChatbotButton = () => {
                 {msg.text}
               </div>
             ))}
-            <div ref={messagesEndRef} /> {/* Invisible div to mark the end */}
+            <div ref={messagesEndRef} /> 
           </div>
           <div className="chatbot-input">
             <input
