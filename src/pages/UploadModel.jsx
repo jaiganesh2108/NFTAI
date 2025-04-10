@@ -22,6 +22,7 @@ const Upload = () => {
     }
   };
 
+  
   const handleDrag = (e) => {
     e.preventDefault();
     e.stopPropagation();
