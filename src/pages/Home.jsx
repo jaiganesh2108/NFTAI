@@ -30,7 +30,7 @@ const Home = () => {
         
         <Navbar />
         <section className="hero">
-          <h1 className="hero-title">Welcome to AIChain</h1>
+          <h1 className="hero-title">Welcome to NooSphere</h1>
           <p className="hero-subtitle">
             A decentralized platform to upload, chain, and monetize AI models — HuggingFace meets Web3.
           </p>

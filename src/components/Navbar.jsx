@@ -43,7 +43,7 @@ const Navbar = () => {
   return (
     <nav className="navbar">
       <div className="navbar-container">
-        <Link to="/" className="navbar-logo">AIChain</Link>
+        <Link to="/" className="navbar-logo">NooSphere</Link>
         <div className="navbar-links">
           <Link to="/" className="navbar-link">Home</Link>
           <Link to="/marketplace" className="navbar-link">Marketplace</Link>
@@ -61,4 +61,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default Navbar;          
