@@ -529,6 +529,27 @@ body {
   transform: translateY(-5px);
 }
 
+/* Tooltip styling for charts (fallback to ensure dark theme) */
+.recharts-tooltip-wrapper {
+  background-color: #1a1a3a !important;
+  border: 1px solid #6b48ff !important;
+  border-radius: 10px !important;
+  color: #fff !important;
+}
+
+/* Custom hover effect for the Achievement Distribution bar chart */
+.achievement-chart .recharts-wrapper:hover {
+  background-color: #1a1a3a !important; /* Dark theme background on hover */
+  transition: background-color 0.3s ease;
+}
+
+/* Ensure the chart area retains its default style without hover */
+.achievement-chart .recharts-wrapper {
+  background-color: #e0e0e0; /* Default light gray background as per image */
+  border-radius: 10px;
+  padding: 10px;
+}
+
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
