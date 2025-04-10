@@ -1,25 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { User } from 'lucide-react';
-import { Edit } from 'lucide-react';
-import { Trash2 } from 'lucide-react';
-import { Star } from 'lucide-react';
-import { Clock } from 'lucide-react';
-import { TrendingUp } from 'lucide-react';
-import { BarChart2 } from 'lucide-react';
-import { DollarSign } from 'lucide-react';
-import { Settings } from 'lucide-react';
-import { FileText } from 'lucide-react';
-import { Download } from 'lucide-react';
-import { Share2 } from 'lucide-react';
-import { Lock } from 'lucide-react';
-import { Unlock } from 'lucide-react';
-import { Grid } from 'lucide-react';
-import { List } from 'lucide-react';
-import { Trophy } from 'lucide-react';
-import { Activity } from 'lucide-react';
-import { GitCommit } from 'lucide-react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { User, Edit, Trash2, Star, Clock, TrendingUp, BarChart2, DollarSign, Settings, FileText, Download, Share2, Lock, Unlock, Grid, List, Trophy, Activity, GitCommit } from 'lucide-react';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
 import Navbar from '../components/Navbar.jsx';
 import Button from '../components/Button.jsx';
 import '../styles/Dashboard.css';
@@ -42,15 +24,21 @@ const Dashboard = () => {
     contributions: 241,
   });
 
-  // Demo data for contributions heatmap (simulated for a year)
-  const contributionData = Array.from({ length: 365 }, (_, i) => {
-    const date = new Date(2024, 0, 1); // Start from Jan 1, 2024
-    date.setDate(date.getDate() + i);
-    const contributions = Math.floor(Math.random() * 5); // Random contributions (0-4)
-    return { date: date.toISOString().split('T')[0], count: contributions };
+  const [contributionData, setContributionData] = useState(() => {
+    const data = [];
+    const startDate = new Date(2024, 3, 9); // April 9, 2024
+    let currentDate = new Date(startDate);
+    while (currentDate <= new Date(2025, 3, 8)) { // Up to April 8, 2025
+      const contributions = Math.floor(Math.random() * 5); // 0 to 4 contributions
+      data.push({
+        date: currentDate.toISOString().split('T')[0],
+        count: contributions,
+      });
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+    return data;
   });
 
-  // Demo data
   const [myModels, setMyModels] = useState([
     { id: 1, name: "NeuralText Pro", category: "Text Generation", description: "Advanced language model for creative writing.", price: 299, status: "published", uses: 1324, rating: 4.8, reviewCount: 256, image: "https://via.placeholder.com/300x200", isNFT: true, blockchain: "Ethereum", createdAt: "2025-03-15" },
     { id: 2, name: "VisionAI Studio", category: "Image Recognition", description: "State-of-the-art computer vision model.", price: 0, status: "draft", uses: 0, rating: 0, reviewCount: 0, image: "https://via.placeholder.com/300x200", isNFT: false, createdAt: "2025-04-01" },
@@ -73,8 +61,10 @@ const Dashboard = () => {
     rank: 15,
     achievements: ["Top Creator - March 2025", "1000 Uses Milestone", "10-Day Streak"],
     tokensEarned: 250,
+    averageRating: 4.6, // Added for potential future use
   });
 
+  // Existing data
   const usageData = [
     { name: 'Mar 1', uses: 145 },
     { name: 'Mar 8', uses: 231 },
@@ -93,10 +83,19 @@ const Dashboard = () => {
     { name: 'Apr 5', revenue: 1289 },
   ];
 
-  const recommendations = [
-    { id: 5, name: "VoiceClone AI", creator: "SpeechTech", category: "Audio Processing", description: "Create a digital voice replica.", price: 249, rating: 4.7, reviewCount: 98, image: "https://via.placeholder.com/300x200", reason: "Based on your interest in SynthWave Audio" },
-    { id: 6, name: "PredictiveAnalytics", creator: "DataScience", category: "Data Analysis", description: "Next-gen forecasting algorithms.", price: 349, rating: 4.6, reviewCount: 112, image: "https://via.placeholder.com/300x200", reason: "Popular in Data Analysis" },
+  // New data for Performance Overview
+  const achievementDistribution = [
+    { name: 'Usage Milestones', value: 40 },
+    { name: 'Creator Awards', value: 30 },
+    { name: 'Streak Achievements', value: 30 },
   ];
+
+  const tokenUsageBreakdown = [
+    { name: 'Model Upgrades', value: 150 },
+    { name: 'Marketplace Purchases', value: 100 },
+  ];
+
+  const COLORS = ['#6b48ff', '#82ca9d', '#a16eff', '#8a4af7'];
 
   const handleProfileUpdate = (e) => {
     e.preventDefault();
@@ -113,9 +112,15 @@ const Dashboard = () => {
   const formatTimestamp = (timestamp) => new Date(timestamp).toLocaleString();
   const formatWalletAddress = (address) => `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
 
-  // Get month and day names for heatmap
-  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const months = ['May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr'];
   const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+  const monthPositions = [
+    { month: 'Jan', position: 0 }, { month: 'Feb', position: 4.5 }, { month: 'Mar', position: 8.5 },
+    { month: 'Apr', position: 13 }, { month: 'May', position: 17.5 }, { month: 'Jun', position: 21.5 },
+    { month: 'Jul', position: 26 }, { month: 'Aug', position: 30.5 }, { month: 'Sep', position: 35 },
+    { month: 'Oct', position: 39 }, { month: 'Nov', position: 43.5 }, { month: 'Dec', position: 48 },
+  ];
 
   return (
     <div className="dashboard-container">
@@ -413,30 +418,69 @@ const Dashboard = () => {
 
             {activeTab === 'performance' && (
               <div className="performance-tab">
-                <h2>Performance Overview</h2>
-                <div className="performance-grid">
+                <h2 className="animated-title">Performance Overview</h2>
+                <div className="performance-overview">
                   <div className="performance-card glass-effect">
                     <h3>Earnings History</h3>
-                    <ResponsiveContainer width="100%" height={200}>
-                      <LineChart data={revenueData}>
+                    <ResponsiveContainer width="100%" height={250}>
+                      <LineChart data={revenueData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
                         <CartesianGrid stroke="#444" />
                         <XAxis dataKey="name" stroke="#aaa" />
                         <YAxis stroke="#aaa" />
                         <Tooltip formatter={(value) => [`$${value}`, 'Earnings']} />
-                        <Line type="monotone" dataKey="revenue" stroke="#82ca9d" strokeWidth={2} dot={false} />
+                        <Line type="monotone" dataKey="revenue" stroke="#82ca9d" strokeWidth={3} dot={{ r: 6 }} activeDot={{ r: 8 }} />
                       </LineChart>
                     </ResponsiveContainer>
                   </div>
                   <div className="performance-card glass-effect">
                     <h3>Usage History</h3>
-                    <ResponsiveContainer width="100%" height={200}>
-                      <LineChart data={usageData}>
+                    <ResponsiveContainer width="100%" height={250}>
+                      <LineChart data={usageData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
                         <CartesianGrid stroke="#444" />
                         <XAxis dataKey="name" stroke="#aaa" />
                         <YAxis stroke="#aaa" />
                         <Tooltip />
-                        <Line type="monotone" dataKey="uses" stroke="#6b48ff" strokeWidth={2} dot={false} />
+                        <Line type="monotone" dataKey="uses" stroke="#6b48ff" strokeWidth={3} dot={{ r: 6 }} activeDot={{ r: 8 }} />
                       </LineChart>
+                    </ResponsiveContainer>
+                  </div>
+                  <div className="performance-card glass-effect">
+                    <h3>Achievement Distribution</h3>
+                    <ResponsiveContainer width="100%" height={250}>
+                      <BarChart data={achievementDistribution} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                        <CartesianGrid stroke="#444" />
+                        <XAxis dataKey="name" stroke="#aaa" />
+                        <YAxis stroke="#aaa" />
+                        <Tooltip formatter={(value) => [`${value}%`, 'Percentage']} />
+                        <Bar dataKey="value" fill="#a16eff" barSize={30} radius={[10, 10, 0, 0]}>
+                          {achievementDistribution.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                          ))}
+                        </Bar>
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+                  <div className="performance-card glass-effect">
+                    <h3>Token Usage Breakdown</h3>
+                    <ResponsiveContainer width="100%" height={250}>
+                      <PieChart>
+                        <Pie
+                          data={tokenUsageBreakdown}
+                          cx="50%"
+                          cy="50%"
+                          innerRadius={60}
+                          outerRadius={100}
+                          fill="#8884d8"
+                          dataKey="value"
+                          labelLine={false}
+                          label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                        >
+                          {tokenUsageBreakdown.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                          ))}
+                        </Pie>
+                        <Tooltip formatter={(value) => [`${value} Tokens`, 'Amount']} />
+                      </PieChart>
                     </ResponsiveContainer>
                   </div>
                   <div className="performance-card glass-effect">
@@ -451,7 +495,7 @@ const Dashboard = () => {
                   </div>
                   <div className="performance-card glass-effect">
                     <h3>Token Earnings</h3>
-                    <div className="value">{userPerformance.tokensEarned}</div>
+                    <div className="value animated-number">{userPerformance.tokensEarned}</div>
                     <p>Earn more by contributing models and engaging with the community!</p>
                   </div>
                 </div>
@@ -467,36 +511,41 @@ const Dashboard = () => {
                   <div className="stat-item"><DollarSign size={18} /> Tokens from Contributions: 225</div>
                 </div>
                 <div className="contribution-heatmap glass-effect">
-                  <div className="heatmap-header">
-                    <span>{profileData.contributions} contributions in the last year</span>
-                  </div>
-                  <div className="heatmap-container">
-                    <div className="heatmap-days">
-                      {days.slice(0, 7).map((day, index) => (
-                        <span key={index} className="day-label">{day.slice(0, 1)}</span>
-                      ))}
-                    </div>
-                    <div className="heatmap-grid">
-                      {contributionData.map((day, index) => {
-                        const contributionCount = day.count;
-                        let colorClass = 'zero';
-                        if (contributionCount === 1) colorClass = 'one';
-                        else if (contributionCount === 2) colorClass = 'two';
-                        else if (contributionCount === 3) colorClass = 'three';
-                        else if (contributionCount >= 4) colorClass = 'four';
-                        return (
-                          <div
-                            key={index}
-                            className={`heatmap-square ${colorClass}`}
-                            title={`${day.count} contribution(s) on ${new Date(day.date).toLocaleDateString()}`}
-                          />
-                        );
-                      })}
-                    </div>
+                  <h3 className="heatmap-header">
+                    {profileData.contributions} contributions in the last year
+                  </h3>
+                  <div className="heatmap-wrapper">
                     <div className="heatmap-months">
-                      {months.map((month, index) => (
-                        <span key={index} className="month-label" style={{ left: `${(index * (100 / 12))}%` }}>{month}</span>
+                      {monthPositions.map((pos, index) => (
+                        <span key={index} className="month-label" style={{ left: `${pos.position}%` }}>
+                          {pos.month}
+                        </span>
                       ))}
+                    </div>
+                    <div className="heatmap-container">
+                      <div className="heatmap-days">
+                        {days.map((day, index) => (
+                          <div key={index} className="day-label">{day}</div>
+                        ))}
+                      </div>
+                      <div className="heatmap-grid">
+                        {Array.from({ length: 53 * 7 }, (_, i) => {
+                          const date = new Date(2024, 3, 9 + (Math.floor(i / 7) * 7) + (i % 7));
+                          const contribution = contributionData.find(d => d.date === date.toISOString().split('T')[0]) || { count: 0 };
+                          let colorClass = 'zero';
+                          if (contribution.count === 1) colorClass = 'one';
+                          else if (contribution.count === 2) colorClass = 'two';
+                          else if (contribution.count === 3) colorClass = 'three';
+                          else if (contribution.count >= 4) colorClass = 'four';
+                          return (
+                            <div
+                              key={i}
+                              className={`heatmap-square ${colorClass}`}
+                              title={`${contribution.count} contribution(s) on ${date.toLocaleDateString()}`}
+                            />
+                          );
+                        })}
+                      </div>
                     </div>
                   </div>
                   <div className="heatmap-footer">
