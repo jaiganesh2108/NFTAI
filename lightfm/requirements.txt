@@ -1,0 +1,3 @@
+lightfm
+numpy
+scipy
