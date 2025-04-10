@@ -4,6 +4,7 @@ import {ethers} from "ethers"
 import '../styles/pages.css';
 import axios from "axios"
 import '../styles/UploadModel.css';
+import ChatbotButton from '../pages/ChatbotButton';
 
 const Upload = () => {
   const [modelFile, setModelFile] = useState(null);
@@ -707,6 +708,8 @@ const abi = [
           </div>
         </div>
       </div>
+      <ChatbotButton onClick={() => alert('Open chatbot modal here!')} />
+
     </div>
   );
 };

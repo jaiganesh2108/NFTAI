@@ -3,6 +3,7 @@ import Navbar from '../components/Navbar';
 import Button from '../components/Button';
 import Card from '../components/Card';
 import '../styles/pages.css';
+import ChatbotButton from '../pages/ChatbotButton.jsx';
 
 const Home = () => {
     return (
@@ -60,6 +61,7 @@ const Home = () => {
             />
           </div>
         </section>
+        <ChatbotButton onClick={() => alert('Open chatbot modal here!')} />
       </div>
     );
   };
