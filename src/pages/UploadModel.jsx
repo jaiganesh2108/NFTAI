@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import Navbar from '../components/Navbar';
 import {ethers} from "ethers"
 import '../styles/pages.css';
+import axios from "axios"
 import '../styles/UploadModel.css';
 
 const Upload = () => {
@@ -443,11 +444,6 @@ const abi = [
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if (!walletConnected) {
-      alert("Please connect your wallet first to upload a model.");
-      return;
-    }
-    
     if(!modelFile || !modelName || !description){
       alert("please fill all required fields")
     }
@@ -694,19 +690,15 @@ const abi = [
               </div>
               
               {/* Submit Button */}
-              <button 
-                type="submit" 
-                className="submit-button" 
-                disabled={!modelFile || !modelName || !description || isUploading || !walletConnected}
-              >
-                {isUploading ? 'Uploading...' : 'Upload Model'}
-              </button>
+              <button
+  type="submit"
+  className="submit-button"
+>
+  {isUploading ? "Uploading..." : "Upload Model"}
+</button>
+
               
-              {!walletConnected && (
-                <div className="wallet-notice">
-                  <p>You need to connect your wallet before uploading a model.</p>
-                </div>
-              )}
+             
             </form>
           </div>
           
