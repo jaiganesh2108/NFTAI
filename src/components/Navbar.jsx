@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import Button from './Button';
-import { ethers } from 'ethers';
-import { BrowserProvider, ethers } from 'ethers';
+import Button from '../components/Button.jsx';
+import { ethers, BrowserProvider } from 'ethers';
 import '../styles/components.css';
 
 const Navbar = () => {
@@ -44,7 +43,7 @@ const Navbar = () => {
   return (
     <nav className="navbar">
       <div className="navbar-container">
-        <Link to="/" className="navbar-logo">AIChain</Link>
+        <Link to="/" className="navbar-logo">NooSphere</Link>
         <div className="navbar-links">
           <Link to="/" className="navbar-link">Home</Link>
           <Link to="/marketplace" className="navbar-link">Marketplace</Link>
@@ -62,4 +61,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default Navbar;          
