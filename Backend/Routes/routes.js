@@ -1,8 +1,9 @@
-import express from 'express';
-import User from '../MModels/User.js';
-import Model from '../Models/Model.js';
+const express=require("express")
+const router=express.Router()
+const User=require("../Models/User.js")
+const Model=require("../Models/Model.js")
 
-const router = express.Router();
+
 
 router.post('/upload-model', async (req, res) => {
   try {
@@ -72,4 +73,4 @@ router.post('/upload-model', async (req, res) => {
   }
 });
 
-export default router;
+module.exports=router

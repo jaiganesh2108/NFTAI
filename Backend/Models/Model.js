@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose=require("mongoose")
 
 const modelSchema = new mongoose.Schema({
   name: String,
@@ -12,4 +12,5 @@ const modelSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
 });
 
-export default mongoose.model('Model', modelSchema);
+const Model=mongoose.model('Model', modelSchema);
+module.exports = Model
