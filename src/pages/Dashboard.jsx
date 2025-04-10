@@ -5,6 +5,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import Navbar from '../components/Navbar.jsx';
 import Button from '../components/Button.jsx';
 import '../styles/Dashboard.css';
+import ChatbotButton from '../pages/ChatbotButton.jsx';
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState('myModels');
@@ -61,7 +62,7 @@ const Dashboard = () => {
     rank: 15,
     achievements: ["Top Creator - March 2025", "1000 Uses Milestone", "10-Day Streak"],
     tokensEarned: 250,
-    averageRating: 4.6, // Added for potential future use
+    averageRating: 4.6,
   });
 
   // Existing data
@@ -564,6 +565,8 @@ const Dashboard = () => {
           </div>
         </div>
       </main>
+      <ChatbotButton onClick={() => alert('Open chatbot modal here!')} />
+
     </div>
   );
 };
