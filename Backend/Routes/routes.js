@@ -3,8 +3,6 @@ const router=express.Router()
 const User=require("../Models/User.js")
 const Model=require("../Models/Model.js")
 
-
-
 router.post('/upload-model', async (req, res) => {
   try {
     const {
