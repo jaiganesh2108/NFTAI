@@ -416,12 +416,22 @@ const Dashboard = () => {
                 <div className="activity-timeline">
                   {recentActivity.length > 0 ? recentActivity.map(activity => (
                     <div key={activity.id} className="activity-item glass-effect">
-                      <div className="activity-icon">{activity.type === 'test' ? <Activity size={20} /> : activity.type === 'contribution' ? <GitCommit size={20} /> : <Star size={20} />}</div>
+                      <div className="activity-icon">
+                        {activity.type === 'test' ? <Activity size={20} /> : activity.type === 'contribution' ? <GitCommit size={20} /> : <Star size={20} />}
+                      </div>
                       <div className="activity-content">
-                        <h3>{activity.type === 'test' ? `Tested ${activity.modelName}` : activity.type === 'contribution' ? `Contributed ${activity.modelName}` : `Saved ${activity.modelName}`}</h3>
+                        <h3>
+                          {activity.type === 'test' ? `Tested ${activity.modelName}` : activity.type === 'contribution' ? `Contributed ${activity.modelName}` : `Saved ${activity.modelName}`}
+                        </h3>
                         <p>{activity.result || ''}</p>
                         <span className="activity-time">{formatTimestamp(activity.timestamp)}</span>
-                        <Link to={`/marketplace/${activity.modelId}`}><Button variant="outline" className="btn-sm">View</Button></Link>
+                        {activity.modelId ? (
+                          <Link to={`/marketplace/${activity.modelId}`}>
+                            <Button variant="outline" className="btn-sm">View</Button>
+                          </Link>
+                        ) : (
+                          <Button variant="outline" className="btn-sm" disabled>View Unavailable</Button>
+                        )}
                       </div>
                     </div>
                   )) : (

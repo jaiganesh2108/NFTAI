@@ -11,7 +11,7 @@ import {
   Search, Filter, Star, Users, TrendingUp, Plus, 
   ShoppingCart, Play, PlusCircle, Lock 
 } from 'lucide-react';
-import Navbar from '../components/Navbar.jsx'; // Import the existing Navbar component
+import Navbar from '../components/Navbar.jsx';
 import "../styles/MarketPlace.css";
 import ChatbotButton from '../pages/ChatbotButton.jsx';
 const Marketplace = () => {
@@ -58,7 +58,7 @@ const Marketplace = () => {
     setTimeout(() => {
       setIsWalletConnected(prev => !prev);
       setIsLoading(false);
-    }, 500); // Simulate async action
+    }, 500);
   };
 
   const resetFilters = () => {
@@ -73,25 +73,20 @@ const Marketplace = () => {
 
   const handleBuy = (model) => {
     console.log(`Buying ${model.name} for $${model.price}`);
-    // Add actual buy logic here
   };
 
   const handleDemo = (model) => {
     console.log(`Trying demo for ${model.name}`);
-    // Add demo logic here
   };
 
   const handleAddToWorkflow = (model) => {
     console.log(`Adding ${model.name} to workflow`);
-    // Add workflow logic here
   };
 
   return (
     <div className="marketplace-container">
       <div className="orb orb-1"></div>
       <div className="orb orb-2"></div>
-      
-      {/* Added the imported Navbar component */}
       <Navbar />
       
       <header className="marketplace-header">

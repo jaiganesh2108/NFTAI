@@ -4,8 +4,6 @@ import Button from '../components/Button';
 import Card from '../components/Card';
 import '../styles/pages.css';
 import ChatbotButton from '../pages/ChatbotButton.jsx';
-
-// ✅ Import local image
 import image1 from '../assets/images/imgg1.jpg';
 import image3 from '../assets/images/imgg3.jpg';
 import image2 from '../assets/images/imagg2.jpg';
