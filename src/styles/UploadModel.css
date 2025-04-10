@@ -296,6 +296,17 @@
     box-shadow: 0 4px 15px rgba(129, 98, 255, 0.3);
   }
   
+  .submit-button {
+    background-color: #8162ff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  
   .submit-button:hover:not(:disabled) {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(129, 98, 255, 0.4);
@@ -305,6 +316,7 @@
     opacity: 0.6;
     cursor: not-allowed;
   }
+  
   
   /* Wallet Notice */
   .wallet-notice {
