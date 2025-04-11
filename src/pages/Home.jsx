@@ -22,6 +22,8 @@ const Home = () => {
       <div className="shooting-star"></div>
       <div className="shooting-star"></div>
 
+
+
       {Array(15).fill().map((_, i) => (
         <div
           key={i}
