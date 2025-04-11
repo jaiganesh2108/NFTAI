@@ -14,7 +14,7 @@ router.post('/upload-model', async (req, res) => {
       isNFT,
       blockchain,
     } = req.body;
-
+    
     // 1. Save uploaded model
     const newModel = await Model.create({
       name,

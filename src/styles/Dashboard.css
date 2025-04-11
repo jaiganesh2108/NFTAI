@@ -12,7 +12,6 @@ body {
   line-height: 1.6;
 }
 
-/* Orbs for background decoration */
 .orb {
   position: absolute;
   border-radius: 50%;
@@ -30,18 +29,91 @@ body {
   100% { transform: translate(20px, 20px); }
 }
 
-/* Dashboard Container */
 .dashboard-container {
   position: relative;
   min-height: 100vh;
-  padding: 30px;
+  padding: 0;
   overflow: hidden;
 }
 
+.navbar {
+  background: linear-gradient(90deg, #1a1a3a, #0a0a1a);
+  padding: 15px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+  border-bottom: 1px solid rgba(107, 72, 255, 0.2);
+}
+
+.navbar-brand {
+  font-size: 1.8rem;
+  color: #6b48ff;
+  font-weight: 700;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: color 0.3s ease;
+}
+
+.navbar-brand:hover {
+  color: #8a4af7;
+}
+
+.navbar-nav {
+  display: flex;
+  gap: 25px;
+  align-items: center;
+}
+
+.nav-link {
+  color: #b0b0c0;
+  text-decoration: none;
+  font-size: 1.1rem;
+  font-weight: 500;
+  padding: 8px 15px;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: #fff;
+  background: rgba(107, 72, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.navbar-actions .btn {
+  background: linear-gradient(45deg, #6b48ff, #8a4af7);
+  color: #fff;
+  padding: 10px 25px;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  box-shadow: 0 4px 15px rgba(107, 72, 255, 0.4);
+  transition: all 0.3s ease;
+}
+
+.navbar-actions .btn:hover {
+  background: linear-gradient(45deg, #8a4af7, #4d2db1);
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(107, 72, 255, 0.6);
+}
+
 .dashboard-main {
+  margin-top: 70px;
   max-width: 1500px;
-  margin: 0 auto;
-  padding-top: 100px;
+  margin: 70px auto 0;
+  padding: 30px;
+  transition: padding 0.3s ease;
 }
 
 .dashboard-header {
@@ -88,7 +160,6 @@ body {
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Profile & Performance Section */
 .profile-performance-section {
   display: grid;
   grid-template-columns: 2fr 1fr;
@@ -241,7 +312,6 @@ body {
   margin-right: 10px;
 }
 
-/* Tabs Navigation */
 .dashboard-tabs {
   display: flex;
   gap: 15px;
@@ -280,7 +350,6 @@ body {
   color: #fff;
 }
 
-/* Tab Content */
 .tab-content {
   min-height: 600px;
   padding: 20px;
@@ -292,7 +361,6 @@ body {
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* My Models Tab */
 .my-models-tab .tab-header {
   display: flex;
   justify-content: space-between;
@@ -447,7 +515,6 @@ body {
   margin-bottom: 20px;
 }
 
-/* Analytics Tab */
 .analytics-tab {
   padding: 20px;
   animation: fadeIn 1s ease;
@@ -474,7 +541,7 @@ body {
   animation: fadeInUp 1s ease;
 }
 
-.analytics-overview {
+.analytics-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 20px;
@@ -529,12 +596,18 @@ body {
   transform: translateY(-5px);
 }
 
+.recharts-tooltip-wrapper {
+  background-color: #1a1a3a !important;
+  border: 1px solid #6b48ff !important;
+  border-radius: 10px !important;
+  color: #fff !important;
+}
+
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Activity Tab */
 .activity-tab h2 {
   margin-bottom: 20px;
 }
@@ -576,12 +649,10 @@ body {
   margin-bottom: 10px;
 }
 
-/* Saved Models Tab */
 .saved-models-tab h2 {
   margin-bottom: 20px;
 }
 
-/* Recommendations Tab */
 .recommendations-tab h2 {
   margin-bottom: 20px;
 }
@@ -610,12 +681,11 @@ body {
   margin: 10px 0;
 }
 
-/* Performance Tab */
 .performance-tab h2 {
   margin-bottom: 20px;
 }
 
-.performance-grid {
+.performance-overview {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 20px;
@@ -642,7 +712,6 @@ body {
   transition: width 0.5s ease;
 }
 
-/* Contributions Tab */
 .contributions-tab h2 {
   margin-bottom: 20px;
 }
@@ -710,32 +779,18 @@ body {
   top: 0;
   left: 30px;
   width: calc(100% - 30px);
-  display: flex;
-  justify-content: space-between;
+  height: 20px;
   color: #aaa;
   font-size: 0.8rem;
-  height: 20px;
+  white-space: nowrap; /* Ensures no wrapping or spacing */
 }
 
 .month-label {
-  position: absolute;
-  transform: translateX(-50%);
-  white-space: nowrap;
+  position: relative;
+  display: inline-block; /* Changed from absolute to inline-block for continuous flow */
+  margin-right: 15px; /* Updated to 15px spacing between months */
+  transform: none; /* Removed translateX to avoid centering offset */
 }
-
-/* Updated month positions based on week counts */
-.month-label:nth-child(1) { left: calc(5 / 53 * 100%); } /* Jan: 5 weeks */
-.month-label:nth-child(2) { left: calc(9 / 53 * 100%); } /* Feb: 4 weeks */
-.month-label:nth-child(3) { left: calc(13 / 53 * 100%); } /* Mar: 4 weeks */
-.month-label:nth-child(4) { left: calc(17 / 53 * 100%); } /* Apr: 4 weeks */
-.month-label:nth-child(5) { left: calc(21 / 53 * 100%); } /* May: 4 weeks */
-.month-label:nth-child(6) { left: calc(26 / 53 * 100%); } /* Jun: 5 weeks */
-.month-label:nth-child(7) { left: calc(30 / 53 * 100%); } /* Jul: 4 weeks */
-.month-label:nth-child(8) { left: calc(34 / 53 * 100%); } /* Aug: 4 weeks */
-.month-label:nth-child(9) { left: calc(39 / 53 * 100%); } /* Sep: 5 weeks */
-.month-label:nth-child(10) { left: calc(43 / 53 * 100%); } /* Oct: 4 weeks */
-.month-label:nth-child(11) { left: calc(47 / 53 * 100%); } /* Nov: 4 weeks */
-.month-label:nth-child(12) { left: calc(52 / 53 * 100%); } /* Dec: 5 weeks */
 
 .heatmap-square {
   width: 12px;
@@ -804,7 +859,6 @@ body {
 .legend-item.three::before { background: #6b48ff; }
 .legend-item.four::before { background: #4d2db1; }
 
-/* Responsive Design */
 @media (max-width: 1024px) {
   .profile-performance-section {
     grid-template-columns: 1fr;
@@ -814,8 +868,8 @@ body {
     grid-template-columns: 1fr;
   }
 
-  .analytics-overview,
-  .performance-grid {
+  .analytics-grid,
+  .performance-overview {
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   }
 
@@ -854,7 +908,7 @@ body {
     height: 150px;
   }
 
-  .analytics-overview {
+  .analytics-grid {
     grid-template-columns: 1fr 1fr;
   }
 
@@ -890,7 +944,7 @@ body {
   }
 
   .dashboard-main {
-    padding-top: 80px;
+    padding: 15px;
   }
 
   .dashboard-header h1 {
@@ -901,7 +955,7 @@ body {
     font-size: 1rem;
   }
 
-  .analytics-overview {
+  .analytics-grid {
     grid-template-columns: 1fr;
   }
 

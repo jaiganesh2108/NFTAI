@@ -4,7 +4,6 @@ import Home from './pages/Home';
 import Marketplace from './pages/Marketplace';
 import UploadModel from './pages/UploadModel';
 import Dashboard from './pages/Dashboard';
-
 const App = () => {
   return (
     <Router>
