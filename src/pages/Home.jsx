@@ -10,9 +10,11 @@ import image2 from '../assets/images/imagg2.jpg';
 import image4 from '../assets/images/imagg4.jpg';
 import image6 from '../assets/images/img6.jpg';
 import image7 from '../assets/images/img7.jpg';
+import { useNavigate } from "react-router-dom";
+
 const Home = () => {
   const [showChatbot, setShowChatbot] = useState(false);
-
+  const navigate = useNavigate();
   return (
     <div className="home cosmic-background">
       <div className="stars-layer"></div>
@@ -42,7 +44,9 @@ const Home = () => {
         </p>
         <div className="hero-buttons">
           <Button>Get Started</Button>
-          <Button variant="secondary">Learn More</Button>
+          <Button variant="secondary" onClick={() => navigate("/Marketplace")}>
+      Learn More
+    </Button>
         </div>
       </section>
 
@@ -76,7 +80,7 @@ const Home = () => {
           />
           <Card
             icon="🧠"
-            title="Smart Chatbot Assistant (Zephyr)"
+            title="Smart Chatbot Assistant (Star)"
             description="Our AI assistant helps you discover, upload, and use models on the platform."
             image={image2}
           />
@@ -149,10 +153,10 @@ const Home = () => {
         <div className="chatbot-container">
           <div className="chatbot-window">
             <div className="chatbot-header">
-              <p>Zephyr AI Assistant</p>
+              <p>Star AI Assistant</p>
             </div>
             <div className="chatbot-messages">
-              <p>Hello! I'm Zephyr, your AI guide to NooSphere. How can I help you today?</p>
+              <p>Hello! I'm Star, your AI guide to NooSphere. How can I help you today?</p>
             </div>
             <div className="chatbot-input">
               <input type="text" placeholder="Type your message..." />
