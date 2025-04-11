@@ -27,7 +27,7 @@ const ChatbotButton = () => {
     const responseMap = [
       {
         topic: 'noosphere',
-        keywords: ['what is noosphere', 'about noosphere', 'noosphere is', 'tell me about noosphere'],
+        keywords: ['what is noosphere', 'about noosphere', 'noosphere is', 'tell me about noosphere','noodsphere'],
         patterns: [/noosphere.*(what|about|is)/i],
         response: 'NooSphere is a decentralized ecosystem for AI, enabling secure sharing, searching, and monetizing of AI models and datasets. It’s trustless, transparent, and rewards contributors with $NSP tokens for tasks like model training or data labeling.'
       },
@@ -38,8 +38,8 @@ const ChatbotButton = () => {
         response: 'NooSphere’s Decentralized AI Marketplace allows you to publish, monetize, and control your AI models transparently. Set your terms, share your work, and earn $NSP tokens based on community value.'
       },
       {
-        topic: 'zephyr',
-        keywords: ['zephyr', 'smart chatbot', 'assistant', 'who are you'],
+        topic: 'Star',
+        keywords: ['Star', 'smart chatbot', 'assistant', 'who are you'],
         patterns: [/zephyr.*(what|who)/i, /chatbot.*noosphere/i],
         response: 'I’m Star, NooSphere’s AI assistant. I help you navigate the platform, discover AI models, or upload your own. Ask me anything about NooSphere!'
       },
@@ -196,7 +196,7 @@ const ChatbotButton = () => {
       {isOpen && (
         <div className="chatbot-card">
           <div className="chatbot-header">
-            <h3>Zephyr - NooSphere Assistant</h3>
+            <h3>Starfire - NooSphere Assistant</h3>
             <button className="close-btn" onClick={toggleChatbot}>
               <X size={20} color="#ffffff" />
             </button>

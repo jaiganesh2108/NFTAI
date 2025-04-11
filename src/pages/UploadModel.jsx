@@ -555,7 +555,7 @@ const abi = [
         <div className="upload-container">
           <div className="upload-content">
             <h1 className="upload-title">Upload AI Model</h1>
-            <p className="upload-subtitle">Share your model with the AIChain community</p>
+            <p className="upload-subtitle">Share your model with the NooSphere community</p>
             
             <form onSubmit={handleSubmit} className="upload-form">
               {/* File Upload Area */}
@@ -585,7 +585,7 @@ const abi = [
                   <div className="upload-placeholder">
                     <div className="upload-icon">⬆️</div>
                     <p>Drag and drop your model file here</p>
-                    <p className="upload-formats">Supported formats: PyTorch (.pt), TensorFlow (.h5), ONNX (.onnx)</p>
+                    <p className="upload-formats">Supported formats: PyTorch (.pt), TensorFlow (.h5), ONNX (.onnx), zip</p>
                     <button type="button" className="browse-button">Browse Files</button>
                   </div>
                 )}

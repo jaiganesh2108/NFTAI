@@ -309,8 +309,8 @@ const Dashboard = () => {
 
       <main className="dashboard-main">
         <header className="dashboard-header">
-          <h1>Welcome, AIChain_Creator!</h1>
-          <p className="header-subtitle">Manage your AI models and track your success on AIChain</p>
+          <h1>Welcome, NooSphere Creator!</h1>
+          <p className="header-subtitle">Manage your AI models and track your success on NooSphere</p>
         </header>
 
         <div className="dashboard-grid">
