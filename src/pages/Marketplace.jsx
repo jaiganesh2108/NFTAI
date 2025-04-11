@@ -289,8 +289,10 @@ const Marketplace = () => {
       image: getRandomImage(),
       isNFT: isNFT,
       blockchain: blockchain,
-      owner: isNFT ? `0x${Math.random().toString(16).substring(2, 6)}...${Math.random().toString(16).substring(2, 6)}` : null,
-      ipfsHash: model.ipfsHash
+      owner: model.uploader ? `${model.uploader.substring(0, 6)}...${model.uploader.substring(model.uploader.length - 4)}` : 
+        (isNFT ? `0x${Math.random().toString(16).substring(2, 6)}...${Math.random().toString(16).substring(2, 6)}` : null),
+      ipfsHash: model.ipfsHash,
+      uploader: model.uploader
     };
   };
 
@@ -309,46 +311,54 @@ const Marketplace = () => {
         // Transform models for UI
         const formattedModels = blockchainModels.map(transformBlockchainModel);
         
-        // Add some default models if blockchain returned empty array
-        if (formattedModels.length === 0) {
-          setModels([
-            { id: 1, name: "NeuralText Pro", category: "Text Generation", tags: ["GPT", "Text", "Generative"], description: "Advanced language model for creative writing and content generation with support for multiple languages.", price: 299, previousPrice: 349, rating: 4.8, reviewCount: 256, usageCount: "13.2k", trending: true, new: false, reputation: "High", image: image5, isNFT: true, blockchain: "Ethereum", owner: "0x1234...abcd" },
-            { id: 2, name: "VisionAI Studio", category: "Image Recognition", tags: ["Vision", "Recognition", "CNN"], description: "State-of-the-art computer vision model for object detection, image classification, and scene understanding.", price: 499, previousPrice: 499, rating: 4.6, reviewCount: 183, usageCount: "8.7k", trending: true, new: true, reputation: "High", image: image6, isNFT: false },
-            { id: 3, name: "SynthWave Audio", category: "Audio Processing", tags: ["Audio", "Speech", "Generation"], description: "Audio generation and processing system for creating realistic speech, music, and sound effects.", price: 199, previousPrice: 249, rating: 4.3, reviewCount: 127, usageCount: "5.4k", trending: false, new: true, reputation: "Medium", image: image13, isNFT: true, blockchain: "Polygon", owner: "0x5678...efgh" },
-            { id: 4, name: "DataMiner Pro", category: "Data Analysis", tags: ["Analytics", "Prediction", "ML"], description: "Machine learning model for advanced data analytics, pattern recognition, and predictive modeling.", price: 399, previousPrice: 399, rating: 4.5, reviewCount: 164, usageCount: "7.1k", trending: false, new: false, reputation: "High", image: image12, isNFT: false },
-          ]);
-        } else {
+        // If blockchain returned models, use them; otherwise fall back to default models
+        if (formattedModels.length > 0) {
           setModels(formattedModels);
+        } else {
+          setDefaultModels();
         }
       } else {
         console.log("Ethereum provider not found, using default models");
-        // Fallback to default models if no Ethereum provider
-        setModels([
-          { id: 1, name: "NeuralText Pro", category: "Text Generation", tags: ["GPT", "Text", "Generative"], description: "Advanced language model for creative writing and content generation with support for multiple languages.", price: 299, previousPrice: 349, rating: 4.8, reviewCount: 256, usageCount: "13.2k", trending: true, new: false, reputation: "High", image: image5, isNFT: true, blockchain: "Ethereum", owner: "0x1234...abcd" },
-          { id: 2, name: "VisionAI Studio", category: "Image Recognition", tags: ["Vision", "Recognition", "CNN"], description: "State-of-the-art computer vision model for object detection, image classification, and scene understanding.", price: 499, previousPrice: 499, rating: 4.6, reviewCount: 183, usageCount: "8.7k", trending: true, new: true, reputation: "High", image: image6, isNFT: false },
-          { id: 3, name: "SynthWave Audio", category: "Audio Processing", tags: ["Audio", "Speech", "Generation"], description: "Audio generation and processing system for creating realistic speech, music, and sound effects.", price: 199, previousPrice: 249, rating: 4.3, reviewCount: 127, usageCount: "5.4k", trending: false, new: true, reputation: "Medium", image: image13, isNFT: true, blockchain: "Polygon", owner: "0x5678...efgh" },
-          { id: 4, name: "DataMiner Pro", category: "Data Analysis", tags: ["Analytics", "Prediction", "ML"], description: "Machine learning model for advanced data analytics, pattern recognition, and predictive modeling.", price: 399, previousPrice: 399, rating: 4.5, reviewCount: 164, usageCount: "7.1k", trending: false, new: false, reputation: "High", image: image12, isNFT: false },
-        ]);
+        setDefaultModels();
       }
     } catch (err) {
       console.error("Error fetching models:", err);
-      // Fallback to default models on error
-      setModels([
-        { id: 1, name: "NeuralText Pro", category: "Text Generation", tags: ["GPT", "Text", "Generative"], description: "Advanced language model for creative writing and content generation with support for multiple languages.", price: 299, previousPrice: 349, rating: 4.8, reviewCount: 256, usageCount: "13.2k", trending: true, new: false, reputation: "High", image: image5, isNFT: true, blockchain: "Ethereum", owner: "0x1234...abcd" },
-        { id: 2, name: "VisionAI Studio", category: "Image Recognition", tags: ["Vision", "Recognition", "CNN"], description: "State-of-the-art computer vision model for object detection, image classification, and scene understanding.", price: 499, previousPrice: 499, rating: 4.6, reviewCount: 183, usageCount: "8.7k", trending: true, new: true, reputation: "High", image: image6, isNFT: false },
-        { id: 3, name: "SynthWave Audio", category: "Audio Processing", tags: ["Audio", "Speech", "Generation"], description: "Audio generation and processing system for creating realistic speech, music, and sound effects.", price: 199, previousPrice: 249, rating: 4.3, reviewCount: 127, usageCount: "5.4k", trending: false, new: true, reputation: "Medium", image: image13, isNFT: true, blockchain: "Polygon", owner: "0x5678...efgh" },
-        { id: 4, name: "DataMiner Pro", category: "Data Analysis", tags: ["Analytics", "Prediction", "ML"], description: "Machine learning model for advanced data analytics, pattern recognition, and predictive modeling.", price: 399, previousPrice: 399, rating: 4.5, reviewCount: 164, usageCount: "7.1k", trending: false, new: false, reputation: "High", image: image12, isNFT: false },
-      ]);
+      setDefaultModels();
     } finally {
       setLoading(false);
     }
   };
 
+  // Set default models when blockchain fetch fails or returns empty
+  const setDefaultModels = () => {
+    setModels([
+      { id: 1, name: "NeuralText Pro", category: "Text Generation", tags: ["GPT", "Text", "Generative"], description: "Advanced language model for creative writing and content generation with support for multiple languages.", price: 299, previousPrice: 349, rating: 4.8, reviewCount: 256, usageCount: "13.2k", trending: true, new: false, reputation: "High", image: image5, isNFT: true, blockchain: "Ethereum", owner: "0x1234...abcd", uploader: "0x1234abcd5678efgh9012ijkl" },
+      { id: 2, name: "VisionAI Studio", category: "Image Recognition", tags: ["Vision", "Recognition", "CNN"], description: "State-of-the-art computer vision model for object detection, image classification, and scene understanding.", price: 499, previousPrice: 499, rating: 4.6, reviewCount: 183, usageCount: "8.7k", trending: true, new: true, reputation: "High", image: image6, isNFT: false, uploader: "0x5678efgh9012ijkl3456mnop" },
+      { id: 3, name: "SynthWave Audio", category: "Audio Processing", tags: ["Audio", "Speech", "Generation"], description: "Audio generation and processing system for creating realistic speech, music, and sound effects.", price: 199, previousPrice: 249, rating: 4.3, reviewCount: 127, usageCount: "5.4k", trending: false, new: true, reputation: "Medium", image: image13, isNFT: true, blockchain: "Polygon", owner: "0x5678...efgh", uploader: "0x9012ijkl3456mnop7890qrst" },
+      { id: 4, name: "DataMiner Pro", category: "Data Analysis", tags: ["Analytics", "Prediction", "ML"], description: "Machine learning model for advanced data analytics, pattern recognition, and predictive modeling.", price: 399, previousPrice: 399, rating: 4.5, reviewCount: 164, usageCount: "7.1k", trending: false, new: false, reputation: "High", image: image12, isNFT: false, uploader: "0x3456mnop7890qrst1234abcd" },
+    ]);
+  };
+
   // Fetch models when component mounts
   useEffect(() => {
     fetchModels();
+    
+    // Check if wallet is connected
+    const checkWalletConnection = async () => {
+      if (window.ethereum) {
+        try {
+          const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+          setIsWalletConnected(accounts.length > 0);
+        } catch (error) {
+          console.error("Error checking wallet connection:", error);
+        }
+      }
+    };
+    
+    checkWalletConnection();
   }, []);
 
+  // Filter models based on selected filters
   const filteredModels = models.filter(model => {
     if (searchTerm && !model.name.toLowerCase().includes(searchTerm.toLowerCase()) && 
         !model.description.toLowerCase().includes(searchTerm.toLowerCase())) return false;
@@ -366,12 +376,21 @@ const Marketplace = () => {
     setSelectedTags(prev => prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]);
   };
 
-  const connectWallet = () => {
+  const connectWallet = async () => {
     setIsLoading(true);
-    setTimeout(() => {
-      setIsWalletConnected(prev => !prev);
+    try {
+      if (window.ethereum) {
+        await window.ethereum.request({ method: 'eth_requestAccounts' });
+        setIsWalletConnected(true);
+      } else {
+        alert("Please install MetaMask or another Ethereum wallet provider.");
+      }
+    } catch (error) {
+      console.error("Error connecting wallet:", error);
+      alert("Failed to connect wallet: " + (error.message || "Unknown error"));
+    } finally {
       setIsLoading(false);
-    }, 500);
+    }
   };
 
   const resetFilters = () => {
@@ -385,6 +404,10 @@ const Marketplace = () => {
   };
 
   const handleBuy = (model) => {
+    if (!isWalletConnected) {
+      alert("Please connect your wallet to purchase this model.");
+      return;
+    }
     console.log(`Buying ${model.name} for $${model.price}`);
   };
 
@@ -393,6 +416,10 @@ const Marketplace = () => {
   };
 
   const handleAddToWorkflow = (model) => {
+    if (!isWalletConnected) {
+      alert("Please connect your wallet to add this model to your workflow.");
+      return;
+    }
     console.log(`Adding ${model.name} to workflow`);
   };
 
@@ -415,6 +442,15 @@ const Marketplace = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
             aria-label="Search models"
           />
+        </div>
+        <div className="wallet-connection">
+          <button 
+            className={`wallet-button ${isWalletConnected ? 'connected' : ''}`}
+            onClick={connectWallet}
+            disabled={isLoading}
+          >
+            {isLoading ? 'Connecting...' : (isWalletConnected ? 'Wallet Connected' : 'Connect Wallet')}
+          </button>
         </div>
       </header>
 
@@ -576,6 +612,12 @@ const Marketplace = () => {
                           ))}
                         </div>
                       </div>
+                      {model.uploader && (
+                        <div className="expanded-section">
+                          <h4>Creator</h4>
+                          <p>{model.owner || `${model.uploader.substring(0, 6)}...${model.uploader.substring(model.uploader.length - 4)}`}</p>
+                        </div>
+                      )}
                       {model.isNFT && (
                         <div className="expanded-section">
                           <h4>Web3 Details</h4>
