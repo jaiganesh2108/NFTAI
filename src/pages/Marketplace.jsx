@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { ethers } from "ethers";
 import image1 from '../assets/images/imgg1.jpg';
 import image3 from '../assets/images/imgg3.jpg';
 import image2 from '../assets/images/imagg2.jpg';
@@ -14,13 +15,10 @@ import {
 import Navbar from '../components/Navbar.jsx';
 import "../styles/MarketPlace.css";
 import ChatbotButton from '../pages/ChatbotButton.jsx';
+
 const Marketplace = () => {
-  const [models] = useState([
-    { id: 1, name: "NeuralText Pro", category: "Text Generation", tags: ["GPT", "Text", "Generative"], description: "Advanced language model for creative writing and content generation with support for multiple languages.", price: 299, previousPrice: 349, rating: 4.8, reviewCount: 256, usageCount: "13.2k", trending: true, new: false, reputation: "High", image: image5 , isNFT: true, blockchain: "Ethereum", owner: "0x1234...abcd" },
-    { id: 2, name: "VisionAI Studio", category: "Image Recognition", tags: ["Vision", "Recognition", "CNN"], description: "State-of-the-art computer vision model for object detection, image classification, and scene understanding.", price: 499, previousPrice: 499, rating: 4.6, reviewCount: 183, usageCount: "8.7k", trending: true, new: true, reputation: "High", image: image6, isNFT: false },
-    { id: 3, name: "SynthWave Audio", category: "Audio Processing", tags: ["Audio", "Speech", "Generation"], description: "Audio generation and processing system for creating realistic speech, music, and sound effects.", price: 199, previousPrice: 249, rating: 4.3, reviewCount: 127, usageCount: "5.4k", trending: false, new: true, reputation: "Medium", image: image13, isNFT: true, blockchain: "Polygon", owner: "0x5678...efgh" },
-    { id: 4, name: "DataMiner Pro", category: "Data Analysis", tags: ["Analytics", "Prediction", "ML"], description: "Machine learning model for advanced data analytics, pattern recognition, and predictive modeling.", price: 399, previousPrice: 399, rating: 4.5, reviewCount: 164, usageCount: "7.1k", trending: false, new: false, reputation: "High", image: image12, isNFT: false },
-  ]);
+  const [models, setModels] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
@@ -35,6 +33,321 @@ const Marketplace = () => {
   const categories = ['All', 'Text Generation', 'Image Recognition', 'Audio Processing', 'Data Analysis'];
   const reputations = ['All', 'High', 'Medium', 'Low'];
   const allTags = ['GPT', 'Text', 'Generative', 'Vision', 'Recognition', 'CNN', 'Audio', 'Speech', 'Analytics', 'Prediction', 'ML'];
+
+  // Contract information
+  const contractAddress = "0xF40613e98Ba82C88E581BBdDaDD5CD072AeDba19";
+  const abi = [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "modelId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "ipfsHash",
+          "type": "string"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "uploader",
+          "type": "address"
+        }
+      ],
+      "name": "ModelUploaded",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "_name",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "_description",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "_ipfsHash",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "_tags",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "_category",
+          "type": "string"
+        },
+        {
+          "internalType": "bool",
+          "name": "_isPublic",
+          "type": "bool"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_price",
+          "type": "uint256"
+        }
+      ],
+      "name": "uploadModel",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getAllModels",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "string",
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "description",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "ipfsHash",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "tags",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "category",
+              "type": "string"
+            },
+            {
+              "internalType": "bool",
+              "name": "isPublic",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256",
+              "name": "price",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "uploader",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "timestamp",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct AIModelRegistry.Model[]",
+          "name": "",
+          "type": "tuple[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "models",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "description",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "ipfsHash",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "tags",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "category",
+          "type": "string"
+        },
+        {
+          "internalType": "bool",
+          "name": "isPublic",
+          "type": "bool"
+        },
+        {
+          "internalType": "uint256",
+          "name": "price",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "uploader",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "timestamp",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ];
+
+  // Helper function to get a random image for models
+  const getRandomImage = () => {
+    const images = [image1, image2, image3, image4, image5, image6, image12, image13];
+    return images[Math.floor(Math.random() * images.length)];
+  };
+
+  // Helper to generate random reputation
+  const getRandomReputation = () => {
+    const reputations = ['High', 'Medium', 'Low'];
+    const weights = [0.7, 0.2, 0.1]; // 70% chance for High, 20% for Medium, 10% for Low
+    
+    const random = Math.random();
+    let sum = 0;
+    for (let i = 0; i < weights.length; i++) {
+      sum += weights[i];
+      if (random <= sum) return reputations[i];
+    }
+    return reputations[0];
+  };
+
+  // Function to convert blockchain model to UI model
+  const transformBlockchainModel = (model, index) => {
+    // Parse tags from comma-separated string to array
+    const tagsArray = model.tags ? model.tags.split(',').map(tag => tag.trim()) : [];
+    
+    // Generate random values for UI display
+    const randomRating = (4 + Math.random()).toFixed(1);
+    const randomReviews = Math.floor(Math.random() * 300) + 1;
+    const randomUsage = `${(Math.random() * 15).toFixed(1)}k`;
+    const isTrending = Math.random() > 0.7; // 30% chance of being trending
+    const isNew = Number(model.timestamp) > (Date.now() / 1000 - 7 * 24 * 60 * 60); // New if less than a week old
+    
+    // Format price (convert from wei to a dollar amount for display)
+    const priceInEth = parseFloat(ethers.formatEther(model.price.toString()));
+    const priceInDollars = Math.floor(priceInEth * 200); // Assuming 1 ETH = $200 for simplicity
+    
+    // Random chance for the model to be an NFT
+    const isNFT = Math.random() > 0.7;
+    const blockchain = isNFT ? (Math.random() > 0.5 ? "Ethereum" : "Polygon") : null;
+    
+    return {
+      id: index + 1,
+      name: model.name,
+      category: model.category || "Text Generation", // Default if missing
+      tags: tagsArray.length > 0 ? tagsArray : allTags.slice(0, 3 + Math.floor(Math.random() * 4)),
+      description: model.description,
+      price: priceInDollars || 299, // Default price if 0
+      previousPrice: priceInDollars < 400 ? priceInDollars + 50 : priceInDollars, // Create a "discount" effect
+      rating: parseFloat(randomRating),
+      reviewCount: randomReviews,
+      usageCount: randomUsage,
+      trending: isTrending,
+      new: isNew,
+      reputation: getRandomReputation(),
+      image: getRandomImage(),
+      isNFT: isNFT,
+      blockchain: blockchain,
+      owner: isNFT ? `0x${Math.random().toString(16).substring(2, 6)}...${Math.random().toString(16).substring(2, 6)}` : null,
+      ipfsHash: model.ipfsHash
+    };
+  };
+
+  // Fetch models from blockchain
+  const fetchModels = async () => {
+    setLoading(true);
+    try {
+      if (window.ethereum) {
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        const signer = await provider.getSigner();
+        const contract = new ethers.Contract(contractAddress, abi, signer);
+
+        // Get models from blockchain
+        const blockchainModels = await contract.getAllModels();
+        
+        // Transform models for UI
+        const formattedModels = blockchainModels.map(transformBlockchainModel);
+        
+        // Add some default models if blockchain returned empty array
+        if (formattedModels.length === 0) {
+          setModels([
+            { id: 1, name: "NeuralText Pro", category: "Text Generation", tags: ["GPT", "Text", "Generative"], description: "Advanced language model for creative writing and content generation with support for multiple languages.", price: 299, previousPrice: 349, rating: 4.8, reviewCount: 256, usageCount: "13.2k", trending: true, new: false, reputation: "High", image: image5, isNFT: true, blockchain: "Ethereum", owner: "0x1234...abcd" },
+            { id: 2, name: "VisionAI Studio", category: "Image Recognition", tags: ["Vision", "Recognition", "CNN"], description: "State-of-the-art computer vision model for object detection, image classification, and scene understanding.", price: 499, previousPrice: 499, rating: 4.6, reviewCount: 183, usageCount: "8.7k", trending: true, new: true, reputation: "High", image: image6, isNFT: false },
+            { id: 3, name: "SynthWave Audio", category: "Audio Processing", tags: ["Audio", "Speech", "Generation"], description: "Audio generation and processing system for creating realistic speech, music, and sound effects.", price: 199, previousPrice: 249, rating: 4.3, reviewCount: 127, usageCount: "5.4k", trending: false, new: true, reputation: "Medium", image: image13, isNFT: true, blockchain: "Polygon", owner: "0x5678...efgh" },
+            { id: 4, name: "DataMiner Pro", category: "Data Analysis", tags: ["Analytics", "Prediction", "ML"], description: "Machine learning model for advanced data analytics, pattern recognition, and predictive modeling.", price: 399, previousPrice: 399, rating: 4.5, reviewCount: 164, usageCount: "7.1k", trending: false, new: false, reputation: "High", image: image12, isNFT: false },
+          ]);
+        } else {
+          setModels(formattedModels);
+        }
+      } else {
+        console.log("Ethereum provider not found, using default models");
+        // Fallback to default models if no Ethereum provider
+        setModels([
+          { id: 1, name: "NeuralText Pro", category: "Text Generation", tags: ["GPT", "Text", "Generative"], description: "Advanced language model for creative writing and content generation with support for multiple languages.", price: 299, previousPrice: 349, rating: 4.8, reviewCount: 256, usageCount: "13.2k", trending: true, new: false, reputation: "High", image: image5, isNFT: true, blockchain: "Ethereum", owner: "0x1234...abcd" },
+          { id: 2, name: "VisionAI Studio", category: "Image Recognition", tags: ["Vision", "Recognition", "CNN"], description: "State-of-the-art computer vision model for object detection, image classification, and scene understanding.", price: 499, previousPrice: 499, rating: 4.6, reviewCount: 183, usageCount: "8.7k", trending: true, new: true, reputation: "High", image: image6, isNFT: false },
+          { id: 3, name: "SynthWave Audio", category: "Audio Processing", tags: ["Audio", "Speech", "Generation"], description: "Audio generation and processing system for creating realistic speech, music, and sound effects.", price: 199, previousPrice: 249, rating: 4.3, reviewCount: 127, usageCount: "5.4k", trending: false, new: true, reputation: "Medium", image: image13, isNFT: true, blockchain: "Polygon", owner: "0x5678...efgh" },
+          { id: 4, name: "DataMiner Pro", category: "Data Analysis", tags: ["Analytics", "Prediction", "ML"], description: "Machine learning model for advanced data analytics, pattern recognition, and predictive modeling.", price: 399, previousPrice: 399, rating: 4.5, reviewCount: 164, usageCount: "7.1k", trending: false, new: false, reputation: "High", image: image12, isNFT: false },
+        ]);
+      }
+    } catch (err) {
+      console.error("Error fetching models:", err);
+      // Fallback to default models on error
+      setModels([
+        { id: 1, name: "NeuralText Pro", category: "Text Generation", tags: ["GPT", "Text", "Generative"], description: "Advanced language model for creative writing and content generation with support for multiple languages.", price: 299, previousPrice: 349, rating: 4.8, reviewCount: 256, usageCount: "13.2k", trending: true, new: false, reputation: "High", image: image5, isNFT: true, blockchain: "Ethereum", owner: "0x1234...abcd" },
+        { id: 2, name: "VisionAI Studio", category: "Image Recognition", tags: ["Vision", "Recognition", "CNN"], description: "State-of-the-art computer vision model for object detection, image classification, and scene understanding.", price: 499, previousPrice: 499, rating: 4.6, reviewCount: 183, usageCount: "8.7k", trending: true, new: true, reputation: "High", image: image6, isNFT: false },
+        { id: 3, name: "SynthWave Audio", category: "Audio Processing", tags: ["Audio", "Speech", "Generation"], description: "Audio generation and processing system for creating realistic speech, music, and sound effects.", price: 199, previousPrice: 249, rating: 4.3, reviewCount: 127, usageCount: "5.4k", trending: false, new: true, reputation: "Medium", image: image13, isNFT: true, blockchain: "Polygon", owner: "0x5678...efgh" },
+        { id: 4, name: "DataMiner Pro", category: "Data Analysis", tags: ["Analytics", "Prediction", "ML"], description: "Machine learning model for advanced data analytics, pattern recognition, and predictive modeling.", price: 399, previousPrice: 399, rating: 4.5, reviewCount: 164, usageCount: "7.1k", trending: false, new: false, reputation: "High", image: image12, isNFT: false },
+      ]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fetch models when component mounts
+  useEffect(() => {
+    fetchModels();
+  }, []);
 
   const filteredModels = models.filter(model => {
     if (searchTerm && !model.name.toLowerCase().includes(searchTerm.toLowerCase()) && 
@@ -210,8 +523,10 @@ const Marketplace = () => {
           </div>
 
           <div className="models-grid">
-            {isLoading ? (
-              <div className="loading-state">Loading...</div>
+            {loading ? (
+              <div className="loading-state glass-effect">
+                <p>Loading models from blockchain...</p>
+              </div>
             ) : filteredModels.length > 0 ? (
               filteredModels.map(model => (
                 <div key={model.id} className="model-card glass-effect">
@@ -266,6 +581,12 @@ const Marketplace = () => {
                           <h4>Web3 Details</h4>
                           <p>Blockchain: {model.blockchain}</p>
                           <p>Owner: {model.owner}</p>
+                        </div>
+                      )}
+                      {model.ipfsHash && (
+                        <div className="expanded-section">
+                          <h4>IPFS Hash</h4>
+                          <p>{model.ipfsHash.substring(0, 16)}...{model.ipfsHash.substring(model.ipfsHash.length - 10)}</p>
                         </div>
                       )}
                       <div className="expanded-section">
