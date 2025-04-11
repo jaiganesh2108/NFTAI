@@ -1,3 +1,4 @@
+/* Button Component Styles */
 .btn {
   padding: 12px 24px;
   border-radius: 25px;
@@ -5,16 +6,21 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
 }
 
 .btn-primary {
   background: linear-gradient(90deg, #8b5cf6, #4f46e5);
   color: white;
-  border: none;
 }
 
 .btn-primary:hover {
   box-shadow: 0 0 15px rgba(139, 92, 246, 0.5);
+  transform: scale(1.05);
 }
 
 .btn-secondary {
@@ -30,7 +36,6 @@
 .btn-disconnect {
   background: linear-gradient(90deg, #22c55e, #16a34a);
   color: white;
-  border: none;
 }
 
 .btn-disconnect:hover {
@@ -38,102 +43,7 @@
   background: linear-gradient(90deg, #16a34a, #15803d);
 }
 
-.card {
-  background: #111827;
-  border-radius: 12px;
-  padding: 24px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  border: 1px solid #374151;
-  transition: all 0.3s ease;
-}
-
-.card:hover {
-  box-shadow: 0 0 20px rgba(139, 92, 246, 0.2);
-}
-
-.card-image {
-  width: 100%;
-  height: 150px;
-  object-fit: cover;
-  border-radius: 8px;
-  margin-bottom: 16px;
-}
-
-.card-title {
-  font-size: 20px;
-  font-weight: 700;
-  color: white;
-  margin-bottom: 8px;
-}
-
-.card-description {
-  font-size: 16px;
-  color: #9ca3af;
-  margin-bottom: 16px;
-}
-
-.navbar {
-  background: #111827;
-  padding: 16px;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.navbar-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.navbar-logo {
-  font-size: 24px;
-  font-weight: 700;
-  color: white;
-  background: linear-gradient(90deg, #a78bfa, #6366f1);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  text-decoration: none;
-}
-
-.navbar-links {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-}
-
-.navbar-link {
-  color: #d1d5db;
-  text-decoration: none;
-  font-size: 16px;
-  transition: color 0.3s ease;
-}
-
-.navbar-link:hover {
-  color: #a78bfa;
-}
-/* Chatbot Floating Button */
-.chatbot-button {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  background-color: #2563eb; /* blue-600 */
-  color: white;
-  padding: 16px;
-  border-radius: 9999px; /* full round */
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.chatbot-button:hover {
-  background-color: #1d4ed8; 
-}
-/* components.css */
+/* Chatbot Button Component Styles */
 .chatbot-button {
   position: fixed;
   bottom: 20px;
@@ -155,28 +65,29 @@
   transform: scale(1.1);
 }
 
+/* Chatbot Card Component Styles */
 .chatbot-card {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  width: 400px; /* Increased width */
-  height: 600px; /* Increased height */
+  width: 400px;
+  height: 600px;
   background: #1a1a2e;
-  border-radius: 20px; /* Larger radius for a softer look */
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5); /* Enhanced shadow for depth */
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
   overflow: hidden;
   animation: slideUp 0.3s ease;
   z-index: 1000;
   border: 2px solid #2d2d44;
   display: flex;
   flex-direction: column;
-  border-top-left-radius: 0; /* Custom shape for uniqueness */
+  border-top-left-radius: 0;
 }
 
 .chatbot-header {
   background: linear-gradient(135deg, #6b48ff, #00ddeb);
   color: #ffffff;
-  padding: 20px; /* Increased padding */
+  padding: 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -199,7 +110,7 @@
 
 .chatbot-header h3 {
   margin: 0;
-  font-size: 22px; /* Larger text */
+  font-size: 22px;
   font-weight: 600;
   position: relative;
   z-index: 1;
@@ -218,29 +129,29 @@
 
 .close-btn:hover {
   transform: rotate(90deg);
-  color: #ff6b6b; /* Red highlight on hover */
+  color: #ff6b6b;
 }
 
 .chatbot-messages {
   flex: 1;
-  padding: 20px; /* Increased padding */
+  padding: 20px;
   overflow-y: auto;
   background: #16213e;
   color: #e0e0e0;
   display: flex;
   flex-direction: column;
-  gap: 15px; /* Increased gap */
-  background: linear-gradient(to bottom, #16213e, #1a1a2e); /* Subtle gradient */
+  gap: 15px;
+  background: linear-gradient(to bottom, #16213e, #1a1a2e);
 }
 
 .message {
-  max-width: 75%; /* Slightly wider messages */
-  padding: 15px; /* Increased padding */
-  border-radius: 15px; /* Larger radius */
+  max-width: 75%;
+  padding: 15px;
+  border-radius: 15px;
   margin-bottom: 10px;
   color: #ffffff;
   word-wrap: break-word;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Added shadow */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   animation: fadeIn 0.3s ease;
 }
 
@@ -256,7 +167,7 @@
 
 .chatbot-input {
   width: 100%;
-  padding: 20px; /* Increased padding */
+  padding: 20px;
   background: #1a1a2e;
   border-top: 2px solid #2d2d44;
   display: flex;
@@ -265,12 +176,12 @@
 
 .chatbot-input input {
   flex: 1;
-  padding: 12px 18px; /* Increased padding */
+  padding: 12px 18px;
   border: 2px solid #3a3a5c;
-  border-radius: 25px; /* Larger radius */
+  border-radius: 25px;
   background: #2d2d44;
   color: #ffffff;
-  font-size: 16px; /* Larger text */
+  font-size: 16px;
   outline: none;
   transition: border-color 0.3s ease;
 }
@@ -287,12 +198,12 @@
   background: linear-gradient(135deg, #6b48ff, #00ddeb);
   color: #ffffff;
   border: none;
-  padding: 12px 20px; /* Increased padding */
-  border-radius: 25px; /* Larger radius */
+  padding: 12px 20px;
+  border-radius: 25px;
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  margin-left: 15px; /* Increased margin */
-  font-size: 16px; /* Larger text */
+  margin-left: 15px;
+  font-size: 16px;
 }
 
 .send-btn:hover {
@@ -300,6 +211,107 @@
   box-shadow: 0 4px 15px rgba(107, 72, 255, 0.5);
 }
 
+/* Navbar Component Styles */
+.navbar {
+  background: #111827;
+  padding: 16px 40px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar-logo {
+  font-size: 24px;
+  font-weight: 700;
+  color: white;
+  background: linear-gradient(90deg, #a78bfa, #6366f1);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-decoration: none;
+  transition: transform 0.3s ease;
+}
+
+.navbar-logo:hover {
+  transform: scale(1.05);
+}
+
+.navbar-links {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-grow: 1;
+  justify-content: center;
+}
+
+.navbar-link {
+  color: #d1d5db;
+  text-decoration: none;
+  font-size: 16px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+.navbar-link:hover {
+  color: #a78bfa;
+  background-color: rgba(167, 139, 250, 0.1);
+}
+
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.btn-connect {
+  background: linear-gradient(90deg, #8b5cf6, #4f46e5);
+  color: white;
+}
+
+.btn-connect:hover {
+  box-shadow: 0 0 15px rgba(139, 92, 246, 0.5);
+  transform: scale(1.05);
+}
+
+.navbar-github {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgba(167, 139, 250, 0.1);
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.navbar-github:hover {
+  background-color: rgba(167, 139, 250, 0.3);
+  transform: scale(1.1);
+}
+
+.navbar-github svg {
+  transition: color 0.3s ease;
+}
+
+.navbar-github:hover svg {
+  color: #a78bfa;
+}
+
+/* Animations */
 @keyframes slideUp {
   from {
     transform: translateY(100%);
@@ -319,4 +331,48 @@
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 16px 20px;
+  }
+
+  .navbar-container {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .navbar-logo {
+    font-size: 20px;
+  }
+
+  .navbar-links {
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .navbar-link {
+    padding: 8px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .navbar-actions {
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .btn-connect,
+  .navbar-github {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .navbar-github {
+    margin-top: 10px;
+  }
 }
