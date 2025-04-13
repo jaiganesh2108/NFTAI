@@ -1,7 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import image1 from '../assets/images/imgg1.jpg';
-import image3 from '../assets/images/imgg3.jpg';
 import image9 from '../assets/images/img9.jpg';
 import image8 from '../assets/images/img8.jpg';
 import image2 from '../assets/images/imagg2.jpg';
