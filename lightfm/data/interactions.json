@@ -1,0 +1,9 @@
+[
+  {"user_id": "wallet_0xabc123", "item_id": "stable_diffusion_v1"},
+  {"user_id": "wallet_0xabc123", "item_id": "gpt4all"},
+  {"user_id": "wallet_0xdef456", "item_id": "llama2_chat"},
+  {"user_id": "wallet_0xghi789", "item_id": "eth_contract_toolkit"},
+  {"user_id": "wallet_0xghi789", "item_id": "model_wallet_linker"},
+  {"user_id": "wallet_0xdef456", "item_id": "gpt4all"},
+  {"user_id": "wallet_0xabc123", "item_id": "model_wallet_linker"}
+]

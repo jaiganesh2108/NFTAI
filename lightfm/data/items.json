@@ -1,0 +1,37 @@
+[
+  {
+    "item_id": "stable_diffusion_v1",
+    "name": "Stable Diffusion v1",
+    "description": "An open-source image generation model.",
+    "file_extensions": [".ckpt", ".safetensors"],
+    "tags": ["image-generation", "stable-diffusion", "text-to-image", "AI-model"]
+  },
+  {
+    "item_id": "gpt4all",
+    "name": "GPT4All",
+    "description": "A locally running language model.",
+    "file_extensions": [".bin", ".ggml", ".gguf"],
+    "tags": ["text-generation", "language-model", "LLM", "AI-model"]
+  },
+  {
+    "item_id": "eth_contract_toolkit",
+    "name": "Ethereum Contract Toolkit",
+    "description": "Toolkit for building and deploying smart contracts.",
+    "file_extensions": [".sol", ".json"],
+    "tags": ["blockchain", "ethereum", "smart-contracts"]
+  },
+  {
+    "item_id": "llama2_chat",
+    "name": "LLaMA2 Chat",
+    "description": "A conversational AI model by Meta.",
+    "file_extensions": [".gguf", ".bin"],
+    "tags": ["chatbot", "text-generation", "AI-model", "LLM"]
+  },
+  {
+    "item_id": "model_wallet_linker",
+    "name": "Model Wallet Linker",
+    "description": "Links AI models to blockchain wallets for NFT deployment.",
+    "file_extensions": [".py"],
+    "tags": ["blockchain", "wallet", "AI-integration"]
+  }
+]
