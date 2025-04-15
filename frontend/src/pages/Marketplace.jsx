@@ -13,12 +13,14 @@ import {
   ShoppingCart, Play, PlusCircle, Lock 
 } from 'lucide-react';
 import Navbar from '../components/Navbar.jsx';
-import "../styles/MarketPlace.css";
+import "../styles/Marketplace.css";
 import ChatbotButton from '../pages/ChatbotButton.jsx';
 
 const Marketplace = () => {
   const [models, setModels] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [recommendedModels, setRecommendedModels] = useState([]);
+  const [loadingRecommendations, setLoadingRecommendations] = useState(false);
 
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
@@ -34,7 +36,6 @@ const Marketplace = () => {
   const reputations = ['All', 'High', 'Medium', 'Low'];
   const allTags = ['GPT', 'Text', 'Generative', 'Vision', 'Recognition', 'CNN', 'Audio', 'Speech', 'Analytics', 'Prediction', 'ML'];
 
-  // Contract information
   const contractAddress = "0xF40613e98Ba82C88E581BBdDaDD5CD072AeDba19";
   const abi = [
     {
@@ -232,17 +233,14 @@ const Marketplace = () => {
     }
   ];
 
-  // Helper function to get a random image for models
   const getRandomImage = () => {
     const images = [image1, image2, image3, image4, image5, image6, image12, image13];
     return images[Math.floor(Math.random() * images.length)];
   };
 
-  // Helper to generate random reputation
   const getRandomReputation = () => {
     const reputations = ['High', 'Medium', 'Low'];
-    const weights = [0.7, 0.2, 0.1]; // 70% chance for High, 20% for Medium, 10% for Low
-    
+    const weights = [0.7, 0.2, 0.1];
     const random = Math.random();
     let sum = 0;
     for (let i = 0; i < weights.length; i++) {
@@ -252,34 +250,29 @@ const Marketplace = () => {
     return reputations[0];
   };
 
-  // Function to convert blockchain model to UI model
   const transformBlockchainModel = (model, index) => {
-    // Parse tags from comma-separated string to array
     const tagsArray = model.tags ? model.tags.split(',').map(tag => tag.trim()) : [];
     
-    // Generate random values for UI display
     const randomRating = (4 + Math.random()).toFixed(1);
     const randomReviews = Math.floor(Math.random() * 300) + 1;
     const randomUsage = `${(Math.random() * 15).toFixed(1)}k`;
-    const isTrending = Math.random() > 0.7; // 30% chance of being trending
-    const isNew = Number(model.timestamp) > (Date.now() / 1000 - 7 * 24 * 60 * 60); // New if less than a week old
+    const isTrending = Math.random() > 0.7;
+    const isNew = Number(model.timestamp) > (Date.now() / 1000 - 7 * 24 * 60 * 60);
     
-    // Format price (convert from wei to a dollar amount for display)
     const priceInEth = parseFloat(ethers.formatEther(model.price.toString()));
-    const priceInDollars = Math.floor(priceInEth * 200); // Assuming 1 ETH = $200 for simplicity
+    const priceInDollars = Math.floor(priceInEth * 200);
     
-    // Random chance for the model to be an NFT
     const isNFT = Math.random() > 0.7;
     const blockchain = isNFT ? (Math.random() > 0.5 ? "Ethereum" : "Polygon") : null;
     
     return {
       id: index + 1,
       name: model.name,
-      category: model.category || "Text Generation", // Default if missing
+      category: model.category || "Text Generation",
       tags: tagsArray.length > 0 ? tagsArray : allTags.slice(0, 3 + Math.floor(Math.random() * 4)),
       description: model.description,
-      price: priceInDollars || 299, // Default price if 0
-      previousPrice: priceInDollars < 400 ? priceInDollars + 50 : priceInDollars, // Create a "discount" effect
+      price: priceInDollars || 299,
+      previousPrice: priceInDollars < 400 ? priceInDollars + 50 : priceInDollars,
       rating: parseFloat(randomRating),
       reviewCount: randomReviews,
       usageCount: randomUsage,
@@ -296,7 +289,6 @@ const Marketplace = () => {
     };
   };
 
-  // Fetch models from blockchain
   const fetchModels = async () => {
     setLoading(true);
     try {
@@ -305,13 +297,9 @@ const Marketplace = () => {
         const signer = await provider.getSigner();
         const contract = new ethers.Contract(contractAddress, abi, signer);
 
-        // Get models from blockchain
         const blockchainModels = await contract.getAllModels();
-        
-        // Transform models for UI
         const formattedModels = blockchainModels.map(transformBlockchainModel);
         
-        // If blockchain returned models, use them; otherwise fall back to default models
         if (formattedModels.length > 0) {
           setModels(formattedModels);
         } else {
@@ -329,7 +317,6 @@ const Marketplace = () => {
     }
   };
 
-  // Set default models when blockchain fetch fails or returns empty
   const setDefaultModels = () => {
     setModels([
       { id: 1, name: "NeuralText Pro", category: "Text Generation", tags: ["GPT", "Text", "Generative"], description: "Advanced language model for creative writing and content generation with support for multiple languages.", price: 299, previousPrice: 349, rating: 4.8, reviewCount: 256, usageCount: "13.2k", trending: true, new: false, reputation: "High", image: image5, isNFT: true, blockchain: "Ethereum", owner: "0x1234...abcd", uploader: "0x1234abcd5678efgh9012ijkl" },
@@ -339,26 +326,57 @@ const Marketplace = () => {
     ]);
   };
 
-  // Fetch models when component mounts
+  const fetchRecommendations = async () => {
+    setLoadingRecommendations(true);
+    try {
+      const response = await fetch('http://localhost:8000/recommend', {
+        method: 'POST',
+        mode: 'cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          user_address: isWalletConnected ? (await window.ethereum.request({ method: 'eth_accounts' }))[0] : null,
+          preferred_categories: selectedCategory !== 'All' ? [selectedCategory] : null,
+          preferred_tags: selectedTags.length > 0 ? selectedTags : null,
+          price_range: priceRange,
+          top_n: 3,
+          search_term: searchTerm // Send search term to backend
+        })
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      setRecommendedModels(data.recommendations || []);
+    } catch (error) {
+      console.error('Error fetching recommendations:', error);
+      setRecommendedModels([]);
+    } finally {
+      setLoadingRecommendations(false);
+    }
+  };
+
   useEffect(() => {
     fetchModels();
-    
-    // Check if wallet is connected
-    const checkWalletConnection = async () => {
-      if (window.ethereum) {
-        try {
-          const accounts = await window.ethereum.request({ method: 'eth_accounts' });
-          setIsWalletConnected(accounts.length > 0);
-        } catch (error) {
-          console.error("Error checking wallet connection:", error);
-        }
+    if (isWalletConnected) {
+      fetchRecommendations();
+    }
+  }, [isWalletConnected, selectedCategory, selectedTags, priceRange, searchTerm]); // Added searchTerm to dependency array
+
+  const checkWalletConnection = async () => {
+    if (window.ethereum) {
+      try {
+        const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+        setIsWalletConnected(accounts.length > 0);
+      } catch (error) {
+        console.error("Error checking wallet connection:", error);
       }
-    };
-    
+    }
+  };
+
+  useEffect(() => {
     checkWalletConnection();
   }, []);
 
-  // Filter models based on selected filters
   const filteredModels = models.filter(model => {
     if (searchTerm && !model.name.toLowerCase().includes(searchTerm.toLowerCase()) && 
         !model.description.toLowerCase().includes(searchTerm.toLowerCase())) return false;
@@ -443,15 +461,6 @@ const Marketplace = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
             aria-label="Search models"
           />
-        </div>
-        <div className="wallet-connection">
-          <button 
-            className={`wallet-button ${isWalletConnected ? 'connected' : ''}`}
-            onClick={connectWallet}
-            disabled={isLoading}
-          >
-            {isLoading ? 'Connecting...' : (isWalletConnected ? 'Wallet Connected' : 'Connect Wallet')}
-          </button>
         </div>
       </header>
 
@@ -669,10 +678,121 @@ const Marketplace = () => {
               </div>
             )}
           </div>
+
+          <div className="recommendations-section">
+            <h2>Recommended Models</h2>
+            {loadingRecommendations ? (
+              <div className="loading-state glass-effect">
+                <p>Loading recommendations...</p>
+              </div>
+            ) : recommendedModels.length > 0 ? (
+              <div className="models-grid">
+                {recommendedModels.map(model => (
+                  <div key={model.id} className="model-card glass-effect">
+                    <div className="model-image-container">
+                      <img src={getRandomImage()} alt={model.name} className="model-image" />
+                      <div className="model-badge">
+                        <span className="badge recommended">Recommended</span>
+                        {model.trending && <span className="badge trending">Trending</span>}
+                        {model.new && <span className="badge new">New</span>}
+                        {model.isNFT && (
+                          <span className="badge nft" title={`NFT on ${model.blockchain}`}>
+                            <Lock className="mr-1 h-3 w-3" /> NFT
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <div className="model-content">
+                      <div className="model-header">
+                        <h3 className="model-title">{model.name}</h3>
+                        <div className="model-rating">
+                          <Star className="star-icon h-4 w-4" />
+                          <span>{model.rating} ({model.reviewCount})</span>
+                        </div>
+                      </div>
+                      <p className="model-category">{model.category}</p>
+                      <p className="model-description">{model.description}</p>
+                      <div className="model-price-container">
+                        <span className="model-price">${model.price}</span>
+                        {model.previousPrice > model.price && (
+                          <span className="model-original-price">${model.previousPrice}</span>
+                        )}
+                      </div>
+                      <button 
+                        className="view-details-button"
+                        onClick={() => setExpandedModel(expandedModel === model.id ? null : model.id)}
+                        aria-expanded={expandedModel === model.id}
+                      >
+                        {expandedModel === model.id ? 'Hide Details' : 'View Details'}
+                      </button>
+                    </div>
+                    {expandedModel === model.id && (
+                      <div className="expanded-view glass-effect">
+                        <div className="expanded-section">
+                          <h4>Tags</h4>
+                          <div className="tags-container">
+                            {model.tags.map(tag => (
+                              <span key={tag} className="tag">{tag}</span>
+                            ))}
+                          </div>
+                        </div>
+                        {model.uploader && (
+                          <div className="expanded-section">
+                            <h4>Creator</h4>
+                            <p>{model.owner || `${model.uploader.substring(0, 6)}...${model.uploader.substring(model.uploader.length - 4)}`}</p>
+                          </div>
+                        )}
+                        {model.isNFT && (
+                          <div className="expanded-section">
+                            <h4>Web3 Details</h4>
+                            <p>Blockchain: {model.blockchain}</p>
+                            <p>Owner: {model.owner}</p>
+                          </div>
+                        )}
+                        {model.ipfsHash && (
+                          <div className="expanded-section">
+                            <h4>IPFS Hash</h4>
+                            <p>{model.ipfsHash.substring(0, 16)}...{model.ipfsHash.substring(model.ipfsHash.length - 10)}</p>
+                          </div>
+                        )}
+                        <div className="expanded-section">
+                          <h4>Usage</h4>
+                          <p><Users className="inline mr-1 h-4 w-4" /> {model.usageCount} users</p>
+                        </div>
+                        <div className="button-group">
+                          <button 
+                            className="action-button buy-button"
+                            onClick={() => handleBuy(model)}
+                          >
+                            <ShoppingCart className="mr-2 h-4 w-4" /> Buy Now
+                          </button>
+                          <button 
+                            className="action-button demo-button"
+                            onClick={() => handleDemo(model)}
+                          >
+                            <Play className="mr-2 h-4 w-4" /> Try Dashboard
+                          </button>
+                          <button 
+                            className="action-button workflow-button"
+                            onClick={() => handleAddToWorkflow(model)}
+                          >
+                            <PlusCircle className="mr-2 h-4 w-4" /> Add to Workflow
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="empty-state glass-effect">
+                <p className="empty-message">No recommendations available.</p>
+              </div>
+            )}
+          </div>
         </section>
       </main>
       <ChatbotButton onClick={() => alert('Open chatbot modal here!')} />
-
     </div>
   );
 };
