@@ -382,6 +382,7 @@ const Marketplace = () => {
       if (window.ethereum) {
         await window.ethereum.request({ method: 'eth_requestAccounts' });
         setIsWalletConnected(true);
+        
       } else {
         alert("Please install MetaMask or another Ethereum wallet provider.");
       }
