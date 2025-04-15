@@ -20,7 +20,22 @@ const Navbar = () => {
       const address = await signer.getAddress();
       setAccount(address);
 
+      const balance=await provider.getBalance(address)
+      const balanceInEth=ethers.formatEther(balance)
+
       console.log("Connected address:", address);
+      console.log("Balance:",balanceInEth,"ETH")
+
+        // 🧠 Store or fetch user from DB
+    const response = await fetch("http://localhost:5000/api/save/wallet", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ walletAddress: address }),
+    });
+
+    const data = await response.json();
+    console.log("User data from DB:", data.user);
+
     } catch (err) {
       console.error("Please install Metamask", err);
       alert("Please install Metamask");
