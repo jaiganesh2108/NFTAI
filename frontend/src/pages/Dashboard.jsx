@@ -283,10 +283,28 @@ const Dashboard = () => {
 
   const COLORS = ['#6b48ff', '#82ca9d', '#a16eff', '#8a4af7'];
 
-  const handleProfileUpdate = (e) => {
+  const handleProfileUpdate = async (e) => {
     e.preventDefault();
-    setIsEditingProfile(false);
+  
+    try {
+      const res = await fetch(`http://localhost:5000/api/save/wallet/${profileData.walletAddress}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: profileData.username,
+          bio: profileData.bio
+        })
+      });
+  
+      const data = await res.json();
+      setProfileData(data.user);
+      setIsEditingProfile(false);
+      console.log("Profile updated!");
+    } catch (error) {
+      console.error("Error updating profile:", error);
+    }
   };
+  
 
   const handleDeleteModel = (modelId) => {
     if (window.confirm("Are you sure you want to delete this model?")) {

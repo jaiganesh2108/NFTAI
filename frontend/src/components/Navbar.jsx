@@ -8,6 +8,7 @@ const Navbar = () => {
   const [signer, setSigner] = useState(null);
   const [provider, setProvider] = useState(null);
   const [account, setAccount] = useState(null);
+  const [profileData,setProfileData]=useState(null)
   
   const connectWallet = async () => {
     try {
@@ -35,6 +36,7 @@ const Navbar = () => {
 
     const data = await response.json();
     console.log("User data from DB:", data.user);
+    setProfileData({ ...data.user, tokens: balanceInEth }); // attach token balance
 
     } catch (err) {
       console.error("Please install Metamask", err);
