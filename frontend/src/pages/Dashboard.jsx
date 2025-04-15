@@ -55,6 +55,7 @@ const ProfileCard = ({ profileData, isEditingProfile, setIsEditingProfile, setPr
   </div>
 );
 
+
 const PerformanceCard = ({ userPerformance }) => (
   <div className="performance-card glass-effect">
     <h3><Trophy size={20} /> User Performance</h3>
