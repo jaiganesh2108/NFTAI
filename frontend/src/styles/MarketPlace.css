@@ -200,6 +200,7 @@ body {
   border-radius: 3px;
   outline: none;
   margin: 0.5rem 0;
+  will-change: transform; /* Optimize slider rendering */
 }
 
 .filter-section input[type="range"]::-webkit-slider-thumb {
@@ -210,6 +211,7 @@ body {
   background: var(--color-accent-primary);
   cursor: pointer;
   box-shadow: var(--shadow-sm);
+  transition: none; /* Remove transitions for smoother dragging */
 }
 
 .filter-section input[type="range"]::-moz-range-thumb {
@@ -219,6 +221,7 @@ body {
   background: var(--color-accent-primary);
   cursor: pointer;
   box-shadow: var(--shadow-sm);
+  transition: none;
 }
 
 .tags-container {
@@ -234,7 +237,8 @@ body {
   color: var(--color-text-secondary);
   border: none;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: background 0.2s ease, color 0.2s ease;
+  will-change: background, color;
 }
 
 .tag-button.active,
@@ -252,7 +256,8 @@ body {
   border: none;
   border-radius: 0.5rem;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: box-shadow 0.2s ease;
+  will-change: box-shadow;
 }
 
 .reset-filters-button:hover {
@@ -282,9 +287,10 @@ body {
   color: var(--color-text-secondary);
   cursor: pointer;
   white-space: nowrap;
-  transition: all 0.3s ease;
+  transition: background 0.2s ease, color 0.2s ease;
   display: flex;
   align-items: center;
+  will-change: background, color;
 }
 
 .tab.active,
@@ -306,7 +312,8 @@ body {
   border-radius: 1rem;
   overflow: hidden;
   box-shadow: var(--shadow-sm);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.2s ease;
+  will-change: transform;
 }
 
 .model-card:hover {
@@ -428,7 +435,8 @@ body {
   color: var(--color-accent-primary);
   cursor: pointer;
   font-weight: 500;
-  transition: color 0.3s ease;
+  transition: color 0.2s ease;
+  will-change: color;
 }
 
 .view-details-button:hover {
@@ -469,7 +477,7 @@ body {
 
 .button-group {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr); /* Updated for favorite button */
   gap: 0.5rem;
 }
 
@@ -480,7 +488,8 @@ body {
   color: white;
   font-weight: 500;
   cursor: pointer;
-  transition: box-shadow 0.3s ease;
+  transition: box-shadow 0.2s ease;
+  will-change: box-shadow;
 }
 
 .buy-button {
@@ -507,6 +516,14 @@ body {
   box-shadow: var(--glow-purple);
 }
 
+.favorite-button {
+  background: linear-gradient(to right, #ff6b6b, #ff8e53); /* New gradient for favorite */
+}
+
+.favorite-button:hover {
+  box-shadow: 0 0 15px rgba(255, 107, 107, 0.5);
+}
+
 .empty-state.glass-effect {
   text-align: center;
   padding: 4rem;
@@ -529,7 +546,8 @@ body {
   border-radius: 0.5rem;
   border: none;
   cursor: pointer;
-  transition: box-shadow 0.3s ease;
+  transition: box-shadow 0.2s ease;
+  will-change: box-shadow;
 }
 
 .clear-filters-button:hover {
@@ -569,7 +587,7 @@ body {
   }
 
   .button-group {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr); /* Adjusted for smaller screens */
   }
 
   .model-card.glass-effect {
@@ -587,6 +605,10 @@ body {
   }
 
   .models-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .button-group {
     grid-template-columns: 1fr;
   }
 }

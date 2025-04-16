@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { ethers } from "ethers";
 import image1 from '../assets/images/imgg1.jpg';
 import image3 from '../assets/images/imgg3.jpg';
@@ -8,13 +8,22 @@ import image5 from '../assets/images/img5.jpg';
 import image6 from '../assets/images/img6.jpg';
 import image13 from '../assets/images/img13.jpg';
 import image12 from '../assets/images/img12.jpg';
-import { 
-  Search, Filter, Star, Users, TrendingUp, Plus, 
-  ShoppingCart, Play, PlusCircle, Lock 
+import {
+  Search, Filter, Star, Users, TrendingUp, Plus,
+  ShoppingCart, Play, PlusCircle, Lock
 } from 'lucide-react';
 import Navbar from '../components/Navbar.jsx';
 import "../styles/Marketplace.css";
 import ChatbotButton from '../pages/ChatbotButton.jsx';
+
+// Debounce utility function
+const debounce = (func, wait) => {
+  let timeout;
+  return (...args) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func(...args), wait);
+  };
+};
 
 const Marketplace = () => {
   const [models, setModels] = useState([]);
@@ -252,19 +261,16 @@ const Marketplace = () => {
 
   const transformBlockchainModel = (model, index) => {
     const tagsArray = model.tags ? model.tags.split(',').map(tag => tag.trim()) : [];
-    
     const randomRating = (4 + Math.random()).toFixed(1);
     const randomReviews = Math.floor(Math.random() * 300) + 1;
     const randomUsage = `${(Math.random() * 15).toFixed(1)}k`;
     const isTrending = Math.random() > 0.7;
     const isNew = Number(model.timestamp) > (Date.now() / 1000 - 7 * 24 * 60 * 60);
-    
     const priceInEth = parseFloat(ethers.formatEther(model.price.toString()));
     const priceInDollars = Math.floor(priceInEth * 200);
-    
     const isNFT = Math.random() > 0.7;
     const blockchain = isNFT ? (Math.random() > 0.5 ? "Ethereum" : "Polygon") : null;
-    
+
     return {
       id: index + 1,
       name: model.name,
@@ -282,7 +288,7 @@ const Marketplace = () => {
       image: getRandomImage(),
       isNFT: isNFT,
       blockchain: blockchain,
-      owner: model.uploader ? `${model.uploader.substring(0, 6)}...${model.uploader.substring(model.uploader.length - 4)}` : 
+      owner: model.uploader ? `${model.uploader.substring(0, 6)}...${model.uploader.substring(model.uploader.length - 4)}` :
         (isNFT ? `0x${Math.random().toString(16).substring(2, 6)}...${Math.random().toString(16).substring(2, 6)}` : null),
       ipfsHash: model.ipfsHash,
       uploader: model.uploader
@@ -296,10 +302,8 @@ const Marketplace = () => {
         const provider = new ethers.BrowserProvider(window.ethereum);
         const signer = await provider.getSigner();
         const contract = new ethers.Contract(contractAddress, abi, signer);
-
         const blockchainModels = await contract.getAllModels();
         const formattedModels = blockchainModels.map(transformBlockchainModel);
-        
         if (formattedModels.length > 0) {
           setModels(formattedModels);
         } else {
@@ -326,7 +330,29 @@ const Marketplace = () => {
     ]);
   };
 
-  const fetchRecommendations = async () => {
+  const logInteraction = async (modelId, interactionType) => {
+    if (!isWalletConnected) return;
+    try {
+      const userAddress = (await window.ethereum.request({ method: 'eth_accounts' }))[0];
+      const response = await fetch('http://localhost:8000/log_interaction', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          user_address: userAddress,
+          model_id: modelId,
+          interaction_type: interactionType
+        })
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      console.log(`Logged ${interactionType} for model ${modelId}`);
+    } catch (error) {
+      console.error(`Error logging ${interactionType}:`, error);
+    }
+  };
+
+  const fetchRecommendations = useCallback(async () => {
     setLoadingRecommendations(true);
     try {
       const response = await fetch('http://localhost:8000/recommend', {
@@ -339,28 +365,52 @@ const Marketplace = () => {
           preferred_tags: selectedTags.length > 0 ? selectedTags : null,
           price_range: priceRange,
           top_n: 3,
-          search_term: searchTerm // Send search term to backend
+          search_term: searchTerm
         })
       });
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
-      setRecommendedModels(data.recommendations || []);
+      // Enrich recommendations with a random image if missing
+      const enrichedRecommendations = (data.recommendations || []).map((model) => ({
+        ...model,
+        image: model.image || getRandomImage(),
+      }));
+      setRecommendedModels(enrichedRecommendations);
     } catch (error) {
       console.error('Error fetching recommendations:', error);
       setRecommendedModels([]);
     } finally {
       setLoadingRecommendations(false);
     }
-  };
+  }, [isWalletConnected, selectedCategory, selectedTags, priceRange, searchTerm]);
+
+  // Debounced version of fetchRecommendations
+  const debouncedFetchRecommendations = useCallback(
+    debounce(fetchRecommendations, 300),
+    [fetchRecommendations]
+  );
 
   useEffect(() => {
     fetchModels();
+    checkWalletConnection();
+  }, []);
+
+  // Trigger recommendations when wallet connects or filters change
+  useEffect(() => {
     if (isWalletConnected) {
-      fetchRecommendations();
+      debouncedFetchRecommendations();
     }
-  }, [isWalletConnected, selectedCategory, selectedTags, priceRange, searchTerm]); // Added searchTerm to dependency array
+  }, [isWalletConnected, selectedCategory, selectedTags, searchTerm, debouncedFetchRecommendations]);
+
+  // Handle price range changes separately to avoid direct useEffect dependency
+  const handlePriceRangeChange = (newPriceRange) => {
+    setPriceRange(newPriceRange);
+    if (isWalletConnected) {
+      debouncedFetchRecommendations();
+    }
+  };
 
   const checkWalletConnection = async () => {
     if (window.ethereum) {
@@ -373,13 +423,9 @@ const Marketplace = () => {
     }
   };
 
-  useEffect(() => {
-    checkWalletConnection();
-  }, []);
-
   const filteredModels = models.filter(model => {
-    if (searchTerm && !model.name.toLowerCase().includes(searchTerm.toLowerCase()) && 
-        !model.description.toLowerCase().includes(searchTerm.toLowerCase())) return false;
+    if (searchTerm && !model.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      !model.description.toLowerCase().includes(searchTerm.toLowerCase())) return false;
     if (selectedCategory !== 'All' && model.category !== selectedCategory) return false;
     if (selectedReputation !== 'All' && model.reputation !== selectedReputation) return false;
     if (model.price < priceRange[0] || model.price > priceRange[1]) return false;
@@ -400,7 +446,6 @@ const Marketplace = () => {
       if (window.ethereum) {
         await window.ethereum.request({ method: 'eth_requestAccounts' });
         setIsWalletConnected(true);
-        
       } else {
         alert("Please install MetaMask or another Ethereum wallet provider.");
       }
@@ -428,6 +473,7 @@ const Marketplace = () => {
       return;
     }
     console.log(`Buying ${model.name} for $${model.price}`);
+    logInteraction(model.id, 'purchase');
   };
 
   const handleDemo = (model) => {
@@ -442,12 +488,20 @@ const Marketplace = () => {
     console.log(`Adding ${model.name} to workflow`);
   };
 
+  const handleFavorite = (model) => {
+    if (!isWalletConnected) {
+      alert("Please connect your wallet to favorite this model.");
+      return;
+    }
+    logInteraction(model.id, 'favorite');
+  };
+
   return (
     <div className="marketplace-container">
       <div className="orb orb-1"></div>
       <div className="orb orb-2"></div>
       <Navbar />
-      
+
       <header className="marketplace-header">
         <div className="header-content">
           <h1>AI Model Marketplace</h1>
@@ -469,7 +523,7 @@ const Marketplace = () => {
           <h2><Filter className="mr-2 h-5 w-5" /> Filters</h2>
           <div className="filter-section">
             <h3>Category</h3>
-            <select 
+            <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
               aria-label="Select category"
@@ -496,7 +550,7 @@ const Marketplace = () => {
           </div>
           <div className="filter-section">
             <h3>Reputation</h3>
-            <select 
+            <select
               value={selectedReputation}
               onChange={(e) => setSelectedReputation(e.target.value)}
               aria-label="Select reputation"
@@ -515,7 +569,7 @@ const Marketplace = () => {
                 min="0"
                 max="500"
                 value={priceRange[0]}
-                onChange={(e) => setPriceRange([parseInt(e.target.value), priceRange[1]])}
+                onChange={(e) => handlePriceRangeChange([parseInt(e.target.value), priceRange[1]])}
                 aria-label="Minimum price"
               />
             </div>
@@ -526,7 +580,7 @@ const Marketplace = () => {
                 min="0"
                 max="500"
                 value={priceRange[1]}
-                onChange={(e) => setPriceRange([priceRange[0], parseInt(e.target.value)])}
+                onChange={(e) => handlePriceRangeChange([priceRange[0], parseInt(e.target.value)])}
                 aria-label="Maximum price"
               />
             </div>
@@ -538,29 +592,29 @@ const Marketplace = () => {
 
         <section className="models-section">
           <div className="tabs">
-            <button 
-              className={`tab ${activeTab === 'all' ? 'active' : ''}`} 
+            <button
+              className={`tab ${activeTab === 'all' ? 'active' : ''}`}
               onClick={() => setActiveTab('all')}
               aria-label="All models"
             >
               All Models
             </button>
-            <button 
-              className={`tab ${activeTab === 'trending' ? 'active' : ''}`} 
+            <button
+              className={`tab ${activeTab === 'trending' ? 'active' : ''}`}
               onClick={() => setActiveTab('trending')}
               aria-label="Trending models"
             >
               <TrendingUp className="mr-2 h-4 w-4" /> Trending
             </button>
-            <button 
-              className={`tab ${activeTab === 'new' ? 'active' : ''}`} 
+            <button
+              className={`tab ${activeTab === 'new' ? 'active' : ''}`}
               onClick={() => setActiveTab('new')}
               aria-label="New models"
             >
               <Plus className="mr-2 h-4 w-4" /> New
             </button>
-            <button 
-              className={`tab ${activeTab === 'high-reputation' ? 'active' : ''}`} 
+            <button
+              className={`tab ${activeTab === 'high-reputation' ? 'active' : ''}`}
               onClick={() => setActiveTab('high-reputation')}
               aria-label="High reputation models"
             >
@@ -604,9 +658,12 @@ const Marketplace = () => {
                         <span className="model-original-price">${model.previousPrice}</span>
                       )}
                     </div>
-                    <button 
+                    <button
                       className="view-details-button"
-                      onClick={() => setExpandedModel(expandedModel === model.id ? null : model.id)}
+                      onClick={() => {
+                        setExpandedModel(expandedModel === model.id ? null : model.id);
+                        logInteraction(model.id, 'view');
+                      }}
                       aria-expanded={expandedModel === model.id}
                     >
                       {expandedModel === model.id ? 'Hide Details' : 'View Details'}
@@ -646,23 +703,29 @@ const Marketplace = () => {
                         <p><Users className="inline mr-1 h-4 w-4" /> {model.usageCount} users</p>
                       </div>
                       <div className="button-group">
-                        <button 
+                        <button
                           className="action-button buy-button"
                           onClick={() => handleBuy(model)}
                         >
                           <ShoppingCart className="mr-2 h-4 w-4" /> Buy Now
                         </button>
-                        <button 
+                        <button
                           className="action-button demo-button"
                           onClick={() => handleDemo(model)}
                         >
                           <Play className="mr-2 h-4 w-4" /> Try Dashboard
                         </button>
-                        <button 
+                        <button
                           className="action-button workflow-button"
                           onClick={() => handleAddToWorkflow(model)}
                         >
                           <PlusCircle className="mr-2 h-4 w-4" /> Add to Workflow
+                        </button>
+                        <button
+                          className="action-button favorite-button"
+                          onClick={() => handleFavorite(model)}
+                        >
+                          <Star className="mr-2 h-4 w-4" /> Favorite
                         </button>
                       </div>
                     </div>
@@ -690,7 +753,14 @@ const Marketplace = () => {
                 {recommendedModels.map(model => (
                   <div key={model.id} className="model-card glass-effect">
                     <div className="model-image-container">
-                      <img src={getRandomImage()} alt={model.name} className="model-image" />
+                      <img 
+                        src={model.image || getRandomImage()} 
+                        alt={model.name} 
+                        className="model-image"
+                        onError={(e) => {
+                          e.target.src = getRandomImage(); // Fallback to random image on error
+                        }}
+                      />
                       <div className="model-badge">
                         <span className="badge recommended">Recommended</span>
                         {model.trending && <span className="badge trending">Trending</span>}
@@ -707,7 +777,7 @@ const Marketplace = () => {
                         <h3 className="model-title">{model.name}</h3>
                         <div className="model-rating">
                           <Star className="star-icon h-4 w-4" />
-                          <span>{model.rating} ({model.reviewCount})</span>
+                          <span>{model.rating} ({model.reviewCount || 0})</span>
                         </div>
                       </div>
                       <p className="model-category">{model.category}</p>
@@ -718,9 +788,12 @@ const Marketplace = () => {
                           <span className="model-original-price">${model.previousPrice}</span>
                         )}
                       </div>
-                      <button 
+                      <button
                         className="view-details-button"
-                        onClick={() => setExpandedModel(expandedModel === model.id ? null : model.id)}
+                        onClick={() => {
+                          setExpandedModel(expandedModel === model.id ? null : model.id);
+                          logInteraction(model.id, 'view');
+                        }}
                         aria-expanded={expandedModel === model.id}
                       >
                         {expandedModel === model.id ? 'Hide Details' : 'View Details'}
@@ -760,23 +833,29 @@ const Marketplace = () => {
                           <p><Users className="inline mr-1 h-4 w-4" /> {model.usageCount} users</p>
                         </div>
                         <div className="button-group">
-                          <button 
+                          <button
                             className="action-button buy-button"
                             onClick={() => handleBuy(model)}
                           >
                             <ShoppingCart className="mr-2 h-4 w-4" /> Buy Now
                           </button>
-                          <button 
+                          <button
                             className="action-button demo-button"
                             onClick={() => handleDemo(model)}
                           >
                             <Play className="mr-2 h-4 w-4" /> Try Dashboard
                           </button>
-                          <button 
+                          <button
                             className="action-button workflow-button"
                             onClick={() => handleAddToWorkflow(model)}
                           >
                             <PlusCircle className="mr-2 h-4 w-4" /> Add to Workflow
+                          </button>
+                          <button
+                            className="action-button favorite-button"
+                            onClick={() => handleFavorite(model)}
+                          >
+                            <Star className="mr-2 h-4 w-4" /> Favorite
                           </button>
                         </div>
                       </div>
