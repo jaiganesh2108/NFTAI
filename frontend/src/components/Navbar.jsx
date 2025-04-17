@@ -27,7 +27,7 @@ const Navbar = () => {
       console.log("Connected address:", address);
       console.log("Balance:",balanceInEth,"ETH")
 
-        // 🧠 Store or fetch user from DB
+        // Store or fetch user from DB
     const response = await fetch("http://localhost:5000/api/save/wallet", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
