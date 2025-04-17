@@ -343,7 +343,7 @@ const Dashboard = () => {
           </section>
 
           <div className="dashboard-tabs">
-            {['myModels', 'analytics', 'saved', 'activity', 'recommendations', 'performance', 'contributions'].map((tab) => (
+            {['myModels', 'analytics', 'saved', 'activity', 'performance', 'contributions'].map((tab) => (
               <button
                 key={tab}
                 className={`tab ${activeTab === tab ? 'active' : ''}`}
@@ -353,7 +353,6 @@ const Dashboard = () => {
                 {tab === 'analytics' && <BarChart2 size={18} />}
                 {tab === 'saved' && <Star size={18} />}
                 {tab === 'activity' && <Clock size={18} />}
-                {tab === 'recommendations' && <TrendingUp size={18} />}
                 {tab === 'performance' && <Trophy size={18} />}
                 {tab === 'contributions' && <GitCommit size={18} />}
                 {tab.charAt(0).toUpperCase() + tab.slice(1).replace(/([A-Z])/g, ' $1')}
@@ -456,37 +455,6 @@ const Dashboard = () => {
                       <Link to="/marketplace"><Button variant="primary">Get Started</Button></Link>
                     </div>
                   )}
-                </div>
-              </div>
-            )}
-
-            {activeTab === 'recommendations' && (
-              <div className="recommendations-tab">
-                <h2>Recommended Models</h2>
-                <div className={`models-container ${viewMode}`}>
-                  {[
-                    { id: 5, name: "CodeGenix", creator: "CodeMaster", category: "Code Generation", rating: 4.7, reviewCount: 89, price: 250, image: image1, reason: "Based on your interest in text generation." },
-                    { id: 6, name: "ImageEnhancer", creator: "VisionPro", category: "Image Processing", rating: 4.9, reviewCount: 112, price: 300, image: image2, reason: "High rating and trending now." },
-                  ].map(model => (
-                    <div key={model.id} className="model-card glass-effect">
-                      <div className="model-image">
-                        <img src={model.image} alt={model.name} />
-                        <span className="recommendation-badge">Recommended</span>
-                      </div>
-                      <div className="model-details">
-                        <h3>{model.name}</h3>
-                        <p className="model-creator">by {model.creator}</p>
-                        <p className="model-category">{model.category}</p>
-                        <div className="model-meta"><Star size={14} /> {model.rating} ({model.reviewCount} reviews)</div>
-                        <p className="recommendation-reason">{model.reason}</p>
-                        <div className="model-price">{model.price > 0 ? `$${model.price}` : 'Free'}</div>
-                        <div className="model-actions">
-                          <Link to={`/marketplace/${model.id}`}><Button variant="primary" className="btn-sm">View</Button></Link>
-                          <Button variant="outline" className="btn-sm" onClick={() => setSavedModels([...savedModels, { ...model, savedAt: new Date().toISOString() }])}><Star size={14} /> Save</Button>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
                 </div>
               </div>
             )}

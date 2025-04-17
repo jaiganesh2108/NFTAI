@@ -31,13 +31,13 @@ body {
   overflow: hidden;
 }
 
-/* Orbs (Background Effects) - Reduced Blur and Animation Complexity */
+/* Orbs (Background Effects) */
 .orb {
   position: absolute;
   border-radius: 50%;
-  filter: blur(30px); /* Reduced from 50px */
+  filter: blur(30px);
   opacity: 0.3;
-  animation: pulse 12s infinite alternate; /* Increased duration for smoother performance */
+  animation: pulse 12s infinite alternate;
 }
 .orb-1 {
   width: 300px;
@@ -56,7 +56,7 @@ body {
 
 @keyframes pulse {
   0% { transform: scale(1); opacity: 0.3; }
-  100% { transform: scale(1.05); opacity: 0.4; } /* Reduced scale for less GPU load */
+  100% { transform: scale(1.05); opacity: 0.4; }
 }
 
 /* Header */
@@ -66,7 +66,7 @@ body {
   box-shadow: var(--shadow-md);
   position: relative;
   z-index: 1;
-  animation: darkShift 15s ease infinite; /* Increased duration for smoother animation */
+  animation: darkShift 15s ease infinite;
 }
 
 @keyframes darkShift {
@@ -93,56 +93,6 @@ body {
   font-weight: 700;
   color: #ffffff;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-}
-
-/* Connect Wallet Button */
-.connect-wallet {
-  background: transparent;
-  border: 2px solid var(--color-accent-primary);
-  color: var(--color-text-primary);
-  padding: 0.75rem 2rem;
-  border-radius: 2rem;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.connect-wallet::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  background: var(--color-accent-secondary);
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  transition: width 0.6s ease, height 0.6s ease;
-  z-index: -1;
-}
-
-.connect-wallet:hover::before {
-  width: 200%;
-  height: 200%;
-}
-
-.connect-wallet.connected {
-  background: var(--color-success);
-  border-color: var(--color-success);
-}
-
-.connect-wallet.loading {
-  opacity: 0.7;
-  cursor: not-allowed;
-}
-
-.connect-wallet:hover:not(.loading) {
-  color: var(--color-text-primary);
-  box-shadow: var(--glow-purple);
 }
 
 /* Search Container */
@@ -174,7 +124,7 @@ body {
   background: transparent;
   color: var(--color-text-primary);
   font-size: 1rem;
-  transition: background 0.3s ease; /* Simplified transition */
+  transition: background 0.3s ease;
 }
 
 .search-container input:focus {
@@ -250,6 +200,7 @@ body {
   border-radius: 3px;
   outline: none;
   margin: 0.5rem 0;
+  will-change: transform; /* Optimize slider rendering */
 }
 
 .filter-section input[type="range"]::-webkit-slider-thumb {
@@ -260,6 +211,7 @@ body {
   background: var(--color-accent-primary);
   cursor: pointer;
   box-shadow: var(--shadow-sm);
+  transition: none; /* Remove transitions for smoother dragging */
 }
 
 .filter-section input[type="range"]::-moz-range-thumb {
@@ -269,6 +221,7 @@ body {
   background: var(--color-accent-primary);
   cursor: pointer;
   box-shadow: var(--shadow-sm);
+  transition: none;
 }
 
 .tags-container {
@@ -284,7 +237,8 @@ body {
   color: var(--color-text-secondary);
   border: none;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: background 0.2s ease, color 0.2s ease;
+  will-change: background, color;
 }
 
 .tag-button.active,
@@ -302,7 +256,8 @@ body {
   border: none;
   border-radius: 0.5rem;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: box-shadow 0.2s ease;
+  will-change: box-shadow;
 }
 
 .reset-filters-button:hover {
@@ -332,9 +287,10 @@ body {
   color: var(--color-text-secondary);
   cursor: pointer;
   white-space: nowrap;
-  transition: all 0.3s ease;
+  transition: background 0.2s ease, color 0.2s ease;
   display: flex;
   align-items: center;
+  will-change: background, color;
 }
 
 .tab.active,
@@ -356,7 +312,8 @@ body {
   border-radius: 1rem;
   overflow: hidden;
   box-shadow: var(--shadow-sm);
-  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Simplified transition */
+  transition: transform 0.2s ease;
+  will-change: transform;
 }
 
 .model-card:hover {
@@ -402,6 +359,11 @@ body {
 
 .badge.nft {
   background: var(--gradient-dark);
+  color: white;
+}
+
+.badge.recommended {
+  background: linear-gradient(to right, #7a78ff, #566bff);
   color: white;
 }
 
@@ -473,7 +435,8 @@ body {
   color: var(--color-accent-primary);
   cursor: pointer;
   font-weight: 500;
-  transition: color 0.3s ease;
+  transition: color 0.2s ease;
+  will-change: color;
 }
 
 .view-details-button:hover {
@@ -514,7 +477,7 @@ body {
 
 .button-group {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr); /* Updated for favorite button */
   gap: 0.5rem;
 }
 
@@ -525,7 +488,8 @@ body {
   color: white;
   font-weight: 500;
   cursor: pointer;
-  transition: box-shadow 0.3s ease; /* Simplified transition */
+  transition: box-shadow 0.2s ease;
+  will-change: box-shadow;
 }
 
 .buy-button {
@@ -552,6 +516,14 @@ body {
   box-shadow: var(--glow-purple);
 }
 
+.favorite-button {
+  background: linear-gradient(to right, #ff6b6b, #ff8e53); /* New gradient for favorite */
+}
+
+.favorite-button:hover {
+  box-shadow: 0 0 15px rgba(255, 107, 107, 0.5);
+}
+
 .empty-state.glass-effect {
   text-align: center;
   padding: 4rem;
@@ -574,7 +546,8 @@ body {
   border-radius: 0.5rem;
   border: none;
   cursor: pointer;
-  transition: box-shadow 0.3s ease;
+  transition: box-shadow 0.2s ease;
+  will-change: box-shadow;
 }
 
 .clear-filters-button:hover {
@@ -586,6 +559,16 @@ body {
   padding: 4rem;
   color: var(--color-text-secondary);
   font-size: 1.5rem;
+}
+
+.recommendations-section {
+  margin-top: 2rem;
+}
+
+.recommendations-section h2 {
+  font-size: 1.75rem;
+  color: var(--color-accent-primary);
+  margin-bottom: 1.5rem;
 }
 
 /* Responsive Design */
@@ -604,7 +587,7 @@ body {
   }
 
   .button-group {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr); /* Adjusted for smaller screens */
   }
 
   .model-card.glass-effect {
@@ -617,16 +600,15 @@ body {
     font-size: 1.75rem;
   }
 
-  .connect-wallet {
-    padding: 0.5rem 1rem;
-    font-size: 0.9rem;
-  }
-
   .search-container input {
     padding: 0.75rem 0.75rem 0.75rem 2.5rem;
   }
 
   .models-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .button-group {
     grid-template-columns: 1fr;
   }
 }
