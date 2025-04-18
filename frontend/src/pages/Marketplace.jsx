@@ -16,6 +16,7 @@ import Navbar from '../components/Navbar.jsx';
 import "../styles/Marketplace.css";
 import ChatbotButton from '../pages/ChatbotButton.jsx';
 
+
 // Contract ABI and address
 const  AIModelNFTABI =[
 	{
