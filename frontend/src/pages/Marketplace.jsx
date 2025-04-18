@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { ethers } from "ethers";
+import { ethers } from 'ethers';
 import image1 from '../assets/images/imgg1.jpg';
 import image3 from '../assets/images/imgg3.jpg';
 import image2 from '../assets/images/imagg2.jpg';
@@ -13,7 +13,7 @@ import {
   ShoppingCart, Play, PlusCircle, Lock
 } from 'lucide-react';
 import Navbar from '../components/Navbar.jsx';
-import "../styles/Marketplace.css";
+import '../styles/Marketplace.css';
 import ChatbotButton from '../pages/ChatbotButton.jsx';
 
 // Debounce utility function
@@ -30,7 +30,6 @@ const Marketplace = () => {
   const [loading, setLoading] = useState(true);
   const [recommendedModels, setRecommendedModels] = useState([]);
   const [loadingRecommendations, setLoadingRecommendations] = useState(false);
-
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedReputation, setSelectedReputation] = useState('All');
@@ -39,207 +38,66 @@ const Marketplace = () => {
   const [activeTab, setActiveTab] = useState('all');
   const [expandedModel, setExpandedModel] = useState(null);
   const [isWalletConnected, setIsWalletConnected] = useState(false);
+  const [userAddress, setUserAddress] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [searchLoading, setSearchLoading] = useState(false);
 
   const categories = ['All', 'Text Generation', 'Image Recognition', 'Audio Processing', 'Data Analysis'];
   const reputations = ['All', 'High', 'Medium', 'Low'];
   const allTags = ['GPT', 'Text', 'Generative', 'Vision', 'Recognition', 'CNN', 'Audio', 'Speech', 'Analytics', 'Prediction', 'ML'];
 
-  const contractAddress = "0xF40613e98Ba82C88E581BBdDaDD5CD072AeDba19";
+  const contractAddress = '0xF40613e98Ba82C88E581BBdDaDD5CD072AeDba19';
   const abi = [
     {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "uint256",
-          "name": "modelId",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "internalType": "string",
-          "name": "name",
-          "type": "string"
-        },
-        {
-          "indexed": false,
-          "internalType": "string",
-          "name": "ipfsHash",
-          "type": "string"
-        },
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "uploader",
-          "type": "address"
-        }
+      anonymous: false,
+      inputs: [
+        { indexed: true, internalType: 'uint256', name: 'modelId', type: 'uint256' },
+        { indexed: false, internalType: 'string', name: 'name', type: 'string' },
+        { indexed: false, internalType: 'string', name: 'ipfsHash', type: 'string' },
+        { indexed: true, internalType: 'address', name: 'uploader', type: 'address' },
       ],
-      "name": "ModelUploaded",
-      "type": "event"
+      name: 'ModelUploaded',
+      type: 'event',
     },
     {
-      "inputs": [
-        {
-          "internalType": "string",
-          "name": "_name",
-          "type": "string"
-        },
-        {
-          "internalType": "string",
-          "name": "_description",
-          "type": "string"
-        },
-        {
-          "internalType": "string",
-          "name": "_ipfsHash",
-          "type": "string"
-        },
-        {
-          "internalType": "string",
-          "name": "_tags",
-          "type": "string"
-        },
-        {
-          "internalType": "string",
-          "name": "_category",
-          "type": "string"
-        },
-        {
-          "internalType": "bool",
-          "name": "_isPublic",
-          "type": "bool"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_price",
-          "type": "uint256"
-        }
+      inputs: [
+        { internalType: 'string', name: '_name', type: 'string' },
+        { internalType: 'string', name: '_description', type: 'string' },
+        { internalType: 'string', name: '_ipfsHash', type: 'string' },
+        { internalType: 'string', name: '_tags', type: 'string' },
+        { internalType: 'string', name: '_category', type: 'string' },
+        { internalType: 'bool', name: '_isPublic', type: 'bool' },
+        { internalType: 'uint256', name: '_price', type: 'uint256' },
       ],
-      "name": "uploadModel",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
+      name: 'uploadModel',
+      outputs: [],
+      stateMutability: 'nonpayable',
+      type: 'function',
     },
     {
-      "inputs": [],
-      "name": "getAllModels",
-      "outputs": [
+      inputs: [],
+      name: 'getAllModels',
+      outputs: [
         {
-          "components": [
-            {
-              "internalType": "string",
-              "name": "name",
-              "type": "string"
-            },
-            {
-              "internalType": "string",
-              "name": "description",
-              "type": "string"
-            },
-            {
-              "internalType": "string",
-              "name": "ipfsHash",
-              "type": "string"
-            },
-            {
-              "internalType": "string",
-              "name": "tags",
-              "type": "string"
-            },
-            {
-              "internalType": "string",
-              "name": "category",
-              "type": "string"
-            },
-            {
-              "internalType": "bool",
-              "name": "isPublic",
-              "type": "bool"
-            },
-            {
-              "internalType": "uint256",
-              "name": "price",
-              "type": "uint256"
-            },
-            {
-              "internalType": "address",
-              "name": "uploader",
-              "type": "address"
-            },
-            {
-              "internalType": "uint256",
-              "name": "timestamp",
-              "type": "uint256"
-            }
+          components: [
+            { internalType: 'string', name: 'name', type: 'string' },
+            { internalType: 'string', name: 'description', type: 'string' },
+            { internalType: 'string', name: 'ipfsHash', type: 'string' },
+            { internalType: 'string', name: 'tags', type: 'string' },
+            { internalType: 'string', name: 'category', type: 'string' },
+            { internalType: 'bool', name: 'isPublic', type: 'bool' },
+            { internalType: 'uint256', name: 'price', type: 'uint256' },
+            { internalType: 'address', name: 'uploader', type: 'address' },
+            { internalType: 'uint256', name: 'timestamp', type: 'uint256' },
           ],
-          "internalType": "struct AIModelRegistry.Model[]",
-          "name": "",
-          "type": "tuple[]"
-        }
+          internalType: 'struct AIModelRegistry.Model[]',
+          name: '',
+          type: 'tuple[]',
+        },
       ],
-      "stateMutability": "view",
-      "type": "function"
+      stateMutability: 'view',
+      type: 'function',
     },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "name": "models",
-      "outputs": [
-        {
-          "internalType": "string",
-          "name": "name",
-          "type": "string"
-        },
-        {
-          "internalType": "string",
-          "name": "description",
-          "type": "string"
-        },
-        {
-          "internalType": "string",
-          "name": "ipfsHash",
-          "type": "string"
-        },
-        {
-          "internalType": "string",
-          "name": "tags",
-          "type": "string"
-        },
-        {
-          "internalType": "string",
-          "name": "category",
-          "type": "string"
-        },
-        {
-          "internalType": "bool",
-          "name": "isPublic",
-          "type": "bool"
-        },
-        {
-          "internalType": "uint256",
-          "name": "price",
-          "type": "uint256"
-        },
-        {
-          "internalType": "address",
-          "name": "uploader",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "timestamp",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    }
   ];
 
   const getRandomImage = () => {
@@ -268,13 +126,13 @@ const Marketplace = () => {
     const isNew = Number(model.timestamp) > (Date.now() / 1000 - 7 * 24 * 60 * 60);
     const priceInEth = parseFloat(ethers.formatEther(model.price.toString()));
     const priceInDollars = Math.floor(priceInEth * 200);
-    const isNFT = Math.random() > 0.7;
-    const blockchain = isNFT ? (Math.random() > 0.5 ? "Ethereum" : "Polygon") : null;
+    const isNFT = !model.isPublic;
+    const blockchain = isNFT ? (Math.random() > 0.5 ? 'Ethereum' : 'Polygon') : null;
 
     return {
       id: index + 1,
       name: model.name,
-      category: model.category || "Text Generation",
+      category: model.category || 'Text Generation',
       tags: tagsArray.length > 0 ? tagsArray : allTags.slice(0, 3 + Math.floor(Math.random() * 4)),
       description: model.description,
       price: priceInDollars || 299,
@@ -286,73 +144,95 @@ const Marketplace = () => {
       new: isNew,
       reputation: getRandomReputation(),
       image: getRandomImage(),
-      isNFT: isNFT,
-      blockchain: blockchain,
-      owner: model.uploader ? `${model.uploader.substring(0, 6)}...${model.uploader.substring(model.uploader.length - 4)}` :
-        (isNFT ? `0x${Math.random().toString(16).substring(2, 6)}...${Math.random().toString(16).substring(2, 6)}` : null),
+      isNFT,
+      blockchain,
+      owner: model.uploader ? `${model.uploader.substring(0, 6)}...${model.uploader.substring(model.uploader.length - 4)}` : null,
       ipfsHash: model.ipfsHash,
-      uploader: model.uploader
+      uploader: model.uploader,
     };
   };
 
   const fetchModels = async () => {
     setLoading(true);
     try {
-      if (window.ethereum) {
-        const provider = new ethers.BrowserProvider(window.ethereum);
-        const signer = await provider.getSigner();
-        const contract = new ethers.Contract(contractAddress, abi, signer);
-        const blockchainModels = await contract.getAllModels();
-        const formattedModels = blockchainModels.map(transformBlockchainModel);
-        if (formattedModels.length > 0) {
-          setModels(formattedModels);
-        } else {
-          setDefaultModels();
-        }
-      } else {
-        console.log("Ethereum provider not found, using default models");
-        setDefaultModels();
+      if (!window.ethereum) {
+        console.error('Ethereum provider not found');
+        setModels([]);
+        return;
       }
+
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const contract = new ethers.Contract(contractAddress, abi, provider);
+      const blockchainModels = await contract.getAllModels();
+      const formattedModels = blockchainModels.map(transformBlockchainModel);
+      setModels(formattedModels);
+
+      // Sync with FastAPI backend
+      await fetch('http://localhost:8000/sync_models', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ models: formattedModels }),
+      });
+
+      // Listen for new model uploads
+      contract.on('ModelUploaded', async (modelId, name, ipfsHash, uploader) => {
+        const newModel = {
+          name,
+          description: 'Newly uploaded model',
+          ipfsHash,
+          tags: '',
+          category: 'Unknown',
+          isPublic: false,
+          price: ethers.parseEther('0'),
+          uploader,
+          timestamp: Math.floor(Date.now() / 1000),
+        };
+        const transformedModel = transformBlockchainModel(newModel, models.length);
+        setModels(prev => [...prev, transformedModel]);
+
+        // Sync new model with backend
+        await fetch('http://localhost:8000/sync_models', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ models: [transformedModel] }),
+        });
+      });
     } catch (err) {
-      console.error("Error fetching models:", err);
-      setDefaultModels();
+      console.error('Error fetching models:', err);
+      setModels([]);
     } finally {
       setLoading(false);
     }
   };
 
-  const setDefaultModels = () => {
-    setModels([
-      { id: 1, name: "NeuralText Pro", category: "Text Generation", tags: ["GPT", "Text", "Generative"], description: "Advanced language model for creative writing and content generation with support for multiple languages.", price: 299, previousPrice: 349, rating: 4.8, reviewCount: 256, usageCount: "13.2k", trending: true, new: false, reputation: "High", image: image5, isNFT: true, blockchain: "Ethereum", owner: "0x1234...abcd", uploader: "0x1234abcd5678efgh9012ijkl" },
-      { id: 2, name: "VisionAI Studio", category: "Image Recognition", tags: ["Vision", "Recognition", "CNN"], description: "State-of-the-art computer vision model for object detection, image classification, and scene understanding.", price: 499, previousPrice: 499, rating: 4.6, reviewCount: 183, usageCount: "8.7k", trending: true, new: true, reputation: "High", image: image6, isNFT: false, uploader: "0x5678efgh9012ijkl3456mnop" },
-      { id: 3, name: "SynthWave Audio", category: "Audio Processing", tags: ["Audio", "Speech", "Generation"], description: "Audio generation and processing system for creating realistic speech, music, and sound effects.", price: 199, previousPrice: 249, rating: 4.3, reviewCount: 127, usageCount: "5.4k", trending: false, new: true, reputation: "Medium", image: image13, isNFT: true, blockchain: "Polygon", owner: "0x5678...efgh", uploader: "0x9012ijkl3456mnop7890qrst" },
-      { id: 4, name: "DataMiner Pro", category: "Data Analysis", tags: ["Analytics", "Prediction", "ML"], description: "Machine learning model for advanced data analytics, pattern recognition, and predictive modeling.", price: 399, previousPrice: 399, rating: 4.5, reviewCount: 164, usageCount: "7.1k", trending: false, new: false, reputation: "High", image: image12, isNFT: false, uploader: "0x3456mnop7890qrst1234abcd" },
-    ]);
-  };
-
-  const logInteraction = async (modelId, interactionType) => {
-    if (!isWalletConnected) return;
+  const logInteraction = async (modelId, interactionType, searchTerm = null) => {
+    if (!isWalletConnected || !userAddress) return;
     try {
-      const userAddress = (await window.ethereum.request({ method: 'eth_accounts' }))[0];
       const response = await fetch('http://localhost:8000/log_interaction', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           user_address: userAddress,
           model_id: modelId,
-          interaction_type: interactionType
-        })
+          interaction_type: interactionType,
+          search_term: interactionType === 'search' ? searchTerm : undefined,
+        }),
       });
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      console.log(`Logged ${interactionType} for model ${modelId}`);
+      console.log(`Logged ${interactionType} for model ${modelId}${searchTerm ? ` with search term "${searchTerm}"` : ''}`);
     } catch (error) {
       console.error(`Error logging ${interactionType}:`, error);
     }
   };
 
   const fetchRecommendations = useCallback(async () => {
+    if (!isWalletConnected || !userAddress) {
+      setRecommendedModels([]);
+      setLoadingRecommendations(false);
+      return;
+    }
     setLoadingRecommendations(true);
     try {
       const response = await fetch('http://localhost:8000/recommend', {
@@ -360,22 +240,24 @@ const Marketplace = () => {
         mode: 'cors',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          user_address: isWalletConnected ? (await window.ethereum.request({ method: 'eth_accounts' }))[0] : null,
-          preferred_categories: selectedCategory !== 'All' ? [selectedCategory] : null,
-          preferred_tags: selectedTags.length > 0 ? selectedTags : null,
+          user_address: userAddress,
+          preferred_categories: selectedCategory !== 'All' ? [selectedCategory] : [],
+          preferred_tags: selectedTags.length > 0 ? selectedTags : [],
           price_range: priceRange,
           top_n: 3,
-          search_term: searchTerm
-        })
+          search_term: searchTerm || '',
+        }),
       });
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
-      // Enrich recommendations with a random image if missing
-      const enrichedRecommendations = (data.recommendations || []).map((model) => ({
+      const enrichedRecommendations = (data.recommendations || []).map(model => ({
         ...model,
         image: model.image || getRandomImage(),
+        rating: model.rating || (4 + Math.random()).toFixed(1),
+        reviewCount: model.reviewCount || Math.floor(Math.random() * 300) + 1,
+        usageCount: model.usageCount || `${(Math.random() * 15).toFixed(1)}k`,
       }));
       setRecommendedModels(enrichedRecommendations);
     } catch (error) {
@@ -384,48 +266,95 @@ const Marketplace = () => {
     } finally {
       setLoadingRecommendations(false);
     }
-  }, [isWalletConnected, selectedCategory, selectedTags, priceRange, searchTerm]);
+  }, [isWalletConnected, userAddress, selectedCategory, selectedTags, priceRange, searchTerm]);
 
-  // Debounced version of fetchRecommendations
-  const debouncedFetchRecommendations = useCallback(
-    debounce(fetchRecommendations, 300),
-    [fetchRecommendations]
+  const debouncedFetchRecommendations = useCallback(debounce(fetchRecommendations, 300), [fetchRecommendations]);
+
+  const debouncedLogSearch = useCallback(
+    debounce((term) => {
+      if (term && isWalletConnected && userAddress) {
+        // Log search interaction for the first matching model
+        const matchingModel = models.find(
+          model =>
+            model.name.toLowerCase().includes(term.toLowerCase()) ||
+            model.description.toLowerCase().includes(term.toLowerCase())
+        );
+        if (matchingModel) {
+          setSearchLoading(true);
+          logInteraction(matchingModel.id, 'search', term).finally(() => setSearchLoading(false));
+        }
+      }
+    }, 500),
+    [models, isWalletConnected, userAddress]
   );
+
+  const checkWalletConnection = async () => {
+    if (window.ethereum) {
+      try {
+        const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+        if (accounts.length > 0) {
+          setIsWalletConnected(true);
+          setUserAddress(accounts[0]);
+        }
+        window.ethereum.on('accountsChanged', accounts => {
+          setIsWalletConnected(accounts.length > 0);
+          setUserAddress(accounts.length > 0 ? accounts[0] : null);
+          if (accounts.length > 0) {
+            fetchRecommendations();
+          } else {
+            setRecommendedModels([]);
+          }
+        });
+      } catch (error) {
+        console.error('Error checking wallet connection:', error);
+      }
+    }
+  };
+
+  const connectWallet = async () => {
+    setIsLoading(true);
+    try {
+      if (window.ethereum) {
+        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+        setIsWalletConnected(true);
+        setUserAddress(accounts[0]);
+        fetchRecommendations();
+      } else {
+        alert('Please install MetaMask or another Ethereum wallet provider.');
+      }
+    } catch (error) {
+      console.error('Error connecting wallet:', error);
+      alert('Failed to connect wallet: ' + (error.message || 'Unknown error'));
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
     fetchModels();
     checkWalletConnection();
   }, []);
 
-  // Trigger recommendations when wallet connects or filters change
   useEffect(() => {
-    if (isWalletConnected) {
+    if (isWalletConnected && userAddress) {
       debouncedFetchRecommendations();
     }
-  }, [isWalletConnected, selectedCategory, selectedTags, searchTerm, debouncedFetchRecommendations]);
+    if (searchTerm) {
+      debouncedLogSearch(searchTerm);
+    }
+  }, [isWalletConnected, userAddress, selectedCategory, selectedTags, priceRange, searchTerm, debouncedFetchRecommendations, debouncedLogSearch]);
 
-  // Handle price range changes separately to avoid direct useEffect dependency
-  const handlePriceRangeChange = (newPriceRange) => {
+  const handlePriceRangeChange = newPriceRange => {
     setPriceRange(newPriceRange);
-    if (isWalletConnected) {
-      debouncedFetchRecommendations();
-    }
-  };
-
-  const checkWalletConnection = async () => {
-    if (window.ethereum) {
-      try {
-        const accounts = await window.ethereum.request({ method: 'eth_accounts' });
-        setIsWalletConnected(accounts.length > 0);
-      } catch (error) {
-        console.error("Error checking wallet connection:", error);
-      }
-    }
   };
 
   const filteredModels = models.filter(model => {
-    if (searchTerm && !model.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      !model.description.toLowerCase().includes(searchTerm.toLowerCase())) return false;
+    if (
+      searchTerm &&
+      !model.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      !model.description.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+      return false;
     if (selectedCategory !== 'All' && model.category !== selectedCategory) return false;
     if (selectedReputation !== 'All' && model.reputation !== selectedReputation) return false;
     if (model.price < priceRange[0] || model.price > priceRange[1]) return false;
@@ -436,25 +365,8 @@ const Marketplace = () => {
     return true;
   });
 
-  const toggleTag = (tag) => {
-    setSelectedTags(prev => prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]);
-  };
-
-  const connectWallet = async () => {
-    setIsLoading(true);
-    try {
-      if (window.ethereum) {
-        await window.ethereum.request({ method: 'eth_requestAccounts' });
-        setIsWalletConnected(true);
-      } else {
-        alert("Please install MetaMask or another Ethereum wallet provider.");
-      }
-    } catch (error) {
-      console.error("Error connecting wallet:", error);
-      alert("Failed to connect wallet: " + (error.message || "Unknown error"));
-    } finally {
-      setIsLoading(false);
-    }
+  const toggleTag = tag => {
+    setSelectedTags(prev => (prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]));
   };
 
   const resetFilters = () => {
@@ -467,32 +379,34 @@ const Marketplace = () => {
     setExpandedModel(null);
   };
 
-  const handleBuy = (model) => {
+  const handleBuy = model => {
     if (!isWalletConnected) {
-      alert("Please connect your wallet to purchase this model.");
+      alert('Please connect your wallet to purchase this model.');
       return;
     }
     console.log(`Buying ${model.name} for $${model.price}`);
     logInteraction(model.id, 'purchase');
   };
 
-  const handleDemo = (model) => {
+  const handleDemo = model => {
     console.log(`Trying demo for ${model.name}`);
   };
 
-  const handleAddToWorkflow = (model) => {
+  const handleAddToWorkflow = model => {
     if (!isWalletConnected) {
-      alert("Please connect your wallet to add this model to your workflow.");
+      alert('Please connect your wallet to add this model to your workflow.');
       return;
     }
     console.log(`Adding ${model.name} to workflow`);
+    logInteraction(model.id, 'workflow');
   };
 
-  const handleFavorite = (model) => {
+  const handleFavorite = model => {
     if (!isWalletConnected) {
-      alert("Please connect your wallet to favorite this model.");
+      alert('Please connect your wallet to favorite this model.');
       return;
     }
+    console.log(`Favoriting ${model.name}`);
     logInteraction(model.id, 'favorite');
   };
 
@@ -505,6 +419,13 @@ const Marketplace = () => {
       <header className="marketplace-header">
         <div className="header-content">
           <h1>AI Model Marketplace</h1>
+          <button className="connect-wallet-button" onClick={connectWallet} disabled={isLoading}>
+            {isLoading
+              ? 'Connecting...'
+              : isWalletConnected
+              ? `Connected: ${userAddress?.substring(0, 6)}...${userAddress?.substring(userAddress.length - 4)}`
+              : 'Connect Wallet'}
+          </button>
         </div>
         <div className="search-container">
           <Search className="search-icon" />
@@ -512,24 +433,30 @@ const Marketplace = () => {
             type="text"
             placeholder="Search AI models by name or description..."
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={e => setSearchTerm(e.target.value)}
             aria-label="Search models"
+            disabled={searchLoading}
           />
+          {searchLoading && <span className="search-loading">Searching...</span>}
         </div>
       </header>
 
       <main className="marketplace-main">
         <aside className="sidebar glass-effect">
-          <h2><Filter className="mr-2 h-5 w-5" /> Filters</h2>
+          <h2>
+            <Filter className="mr-2 h-5 w-5" /> Filters
+          </h2>
           <div className="filter-section">
             <h3>Category</h3>
             <select
               value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
+              onChange={e => setSelectedCategory(e.target.value)}
               aria-label="Select category"
             >
               {categories.map(category => (
-                <option key={category} value={category}>{category}</option>
+                <option key={category} value={category}>
+                  {category}
+                </option>
               ))}
             </select>
           </div>
@@ -552,11 +479,13 @@ const Marketplace = () => {
             <h3>Reputation</h3>
             <select
               value={selectedReputation}
-              onChange={(e) => setSelectedReputation(e.target.value)}
+              onChange={e => setSelectedReputation(e.target.value)}
               aria-label="Select reputation"
             >
               {reputations.map(rep => (
-                <option key={rep} value={rep}>{rep}</option>
+                <option key={rep} value={rep}>
+                  {rep}
+                </option>
               ))}
             </select>
           </div>
@@ -569,7 +498,7 @@ const Marketplace = () => {
                 min="0"
                 max="500"
                 value={priceRange[0]}
-                onChange={(e) => handlePriceRangeChange([parseInt(e.target.value), priceRange[1]])}
+                onChange={e => handlePriceRangeChange([parseInt(e.target.value), priceRange[1]])}
                 aria-label="Minimum price"
               />
             </div>
@@ -580,7 +509,7 @@ const Marketplace = () => {
                 min="0"
                 max="500"
                 value={priceRange[1]}
-                onChange={(e) => handlePriceRangeChange([priceRange[0], parseInt(e.target.value)])}
+                onChange={e => handlePriceRangeChange([priceRange[0], parseInt(e.target.value)])}
                 aria-label="Maximum price"
               />
             </div>
@@ -631,7 +560,14 @@ const Marketplace = () => {
               filteredModels.map(model => (
                 <div key={model.id} className="model-card glass-effect">
                   <div className="model-image-container">
-                    <img src={model.image} alt={model.name} className="model-image" />
+                    <img
+                      src={model.image}
+                      alt={model.name}
+                      className="model-image"
+                      onError={e => {
+                        e.target.src = getRandomImage();
+                      }}
+                    />
                     <div className="model-badge">
                       {model.trending && <span className="badge trending">Trending</span>}
                       {model.new && <span className="badge new">New</span>}
@@ -647,11 +583,18 @@ const Marketplace = () => {
                       <h3 className="model-title">{model.name}</h3>
                       <div className="model-rating">
                         <Star className="star-icon h-4 w-4" />
-                        <span>{model.rating} ({model.reviewCount})</span>
+                        <span>
+                          {model.rating} ({model.reviewCount})
+                        </span>
                       </div>
                     </div>
                     <p className="model-category">{model.category}</p>
                     <p className="model-description">{model.description}</p>
+                    {model.isNFT && (
+                      <p className="model-blockchain">
+                        Blockchain: {model.blockchain} | Owner: {model.owner}
+                      </p>
+                    )}
                     <div className="model-price-container">
                       <span className="model-price">${model.price}</span>
                       {model.previousPrice > model.price && (
@@ -675,14 +618,16 @@ const Marketplace = () => {
                         <h4>Tags</h4>
                         <div className="tags-container">
                           {model.tags.map(tag => (
-                            <span key={tag} className="tag">{tag}</span>
+                            <span key={tag} className="tag">
+                              {tag}
+                            </span>
                           ))}
                         </div>
                       </div>
                       {model.uploader && (
                         <div className="expanded-section">
                           <h4>Creator</h4>
-                          <p>{model.owner || `${model.uploader.substring(0, 6)}...${model.uploader.substring(model.uploader.length - 4)}`}</p>
+                          <p>{model.owner}</p>
                         </div>
                       )}
                       {model.isNFT && (
@@ -695,36 +640,28 @@ const Marketplace = () => {
                       {model.ipfsHash && (
                         <div className="expanded-section">
                           <h4>IPFS Hash</h4>
-                          <p>{model.ipfsHash.substring(0, 16)}...{model.ipfsHash.substring(model.ipfsHash.length - 10)}</p>
+                          <p>
+                            {model.ipfsHash.substring(0, 16)}...{model.ipfsHash.substring(model.ipfsHash.length - 10)}
+                          </p>
                         </div>
                       )}
                       <div className="expanded-section">
                         <h4>Usage</h4>
-                        <p><Users className="inline mr-1 h-4 w-4" /> {model.usageCount} users</p>
+                        <p>
+                          <Users className="inline mr-1 h-4 w-4" /> {model.usageCount} users
+                        </p>
                       </div>
                       <div className="button-group">
-                        <button
-                          className="action-button buy-button"
-                          onClick={() => handleBuy(model)}
-                        >
+                        <button className="action-button buy-button" onClick={() => handleBuy(model)}>
                           <ShoppingCart className="mr-2 h-4 w-4" /> Buy Now
                         </button>
-                        <button
-                          className="action-button demo-button"
-                          onClick={() => handleDemo(model)}
-                        >
+                        <button className="action-button demo-button" onClick={() => handleDemo(model)}>
                           <Play className="mr-2 h-4 w-4" /> Try Dashboard
                         </button>
-                        <button
-                          className="action-button workflow-button"
-                          onClick={() => handleAddToWorkflow(model)}
-                        >
+                        <button className="action-button workflow-button" onClick={() => handleAddToWorkflow(model)}>
                           <PlusCircle className="mr-2 h-4 w-4" /> Add to Workflow
                         </button>
-                        <button
-                          className="action-button favorite-button"
-                          onClick={() => handleFavorite(model)}
-                        >
+                        <button className="action-button favorite-button" onClick={() => handleFavorite(model)}>
                           <Star className="mr-2 h-4 w-4" /> Favorite
                         </button>
                       </div>
@@ -734,10 +671,14 @@ const Marketplace = () => {
               ))
             ) : (
               <div className="empty-state glass-effect">
-                <p className="empty-message">No models found matching your criteria.</p>
-                <button className="clear-filters-button" onClick={resetFilters}>
-                  Clear Filters
-                </button>
+                <p className="empty-message">
+                  {window.ethereum ? 'No models available on the blockchain.' : 'Please install MetaMask to view models.'}
+                </p>
+                {window.ethereum && (
+                  <button className="clear-filters-button" onClick={resetFilters}>
+                    Clear Filters
+                  </button>
+                )}
               </div>
             )}
           </div>
@@ -753,12 +694,12 @@ const Marketplace = () => {
                 {recommendedModels.map(model => (
                   <div key={model.id} className="model-card glass-effect">
                     <div className="model-image-container">
-                      <img 
-                        src={model.image || getRandomImage()} 
-                        alt={model.name} 
+                      <img
+                        src={model.image}
+                        alt={model.name}
                         className="model-image"
-                        onError={(e) => {
-                          e.target.src = getRandomImage(); // Fallback to random image on error
+                        onError={e => {
+                          e.target.src = getRandomImage();
                         }}
                       />
                       <div className="model-badge">
@@ -777,11 +718,18 @@ const Marketplace = () => {
                         <h3 className="model-title">{model.name}</h3>
                         <div className="model-rating">
                           <Star className="star-icon h-4 w-4" />
-                          <span>{model.rating} ({model.reviewCount || 0})</span>
+                          <span>
+                            {model.rating} ({model.reviewCount})
+                          </span>
                         </div>
                       </div>
                       <p className="model-category">{model.category}</p>
                       <p className="model-description">{model.description}</p>
+                      {model.isNFT && (
+                        <p className="model-blockchain">
+                          Blockchain: {model.blockchain} | Owner: {model.owner}
+                        </p>
+                      )}
                       <div className="model-price-container">
                         <span className="model-price">${model.price}</span>
                         {model.previousPrice > model.price && (
@@ -805,14 +753,16 @@ const Marketplace = () => {
                           <h4>Tags</h4>
                           <div className="tags-container">
                             {model.tags.map(tag => (
-                              <span key={tag} className="tag">{tag}</span>
+                              <span key={tag} className="tag">
+                                {tag}
+                              </span>
                             ))}
                           </div>
                         </div>
                         {model.uploader && (
                           <div className="expanded-section">
                             <h4>Creator</h4>
-                            <p>{model.owner || `${model.uploader.substring(0, 6)}...${model.uploader.substring(model.uploader.length - 4)}`}</p>
+                            <p>{model.owner}</p>
                           </div>
                         )}
                         {model.isNFT && (
@@ -825,36 +775,28 @@ const Marketplace = () => {
                         {model.ipfsHash && (
                           <div className="expanded-section">
                             <h4>IPFS Hash</h4>
-                            <p>{model.ipfsHash.substring(0, 16)}...{model.ipfsHash.substring(model.ipfsHash.length - 10)}</p>
+                            <p>
+                              {model.ipfsHash.substring(0, 16)}...{model.ipfsHash.substring(model.ipfsHash.length - 10)}
+                            </p>
                           </div>
                         )}
                         <div className="expanded-section">
                           <h4>Usage</h4>
-                          <p><Users className="inline mr-1 h-4 w-4" /> {model.usageCount} users</p>
+                          <p>
+                            <Users className="inline mr-1 h-4 w-4" /> {model.usageCount} users
+                          </p>
                         </div>
                         <div className="button-group">
-                          <button
-                            className="action-button buy-button"
-                            onClick={() => handleBuy(model)}
-                          >
+                          <button className="action-button buy-button" onClick={() => handleBuy(model)}>
                             <ShoppingCart className="mr-2 h-4 w-4" /> Buy Now
                           </button>
-                          <button
-                            className="action-button demo-button"
-                            onClick={() => handleDemo(model)}
-                          >
+                          <button className="action-button demo-button" onClick={() => handleDemo(model)}>
                             <Play className="mr-2 h-4 w-4" /> Try Dashboard
                           </button>
-                          <button
-                            className="action-button workflow-button"
-                            onClick={() => handleAddToWorkflow(model)}
-                          >
+                          <button className="action-button workflow-button" onClick={() => handleAddToWorkflow(model)}>
                             <PlusCircle className="mr-2 h-4 w-4" /> Add to Workflow
                           </button>
-                          <button
-                            className="action-button favorite-button"
-                            onClick={() => handleFavorite(model)}
-                          >
+                          <button className="action-button favorite-button" onClick={() => handleFavorite(model)}>
                             <Star className="mr-2 h-4 w-4" /> Favorite
                           </button>
                         </div>
@@ -865,7 +807,16 @@ const Marketplace = () => {
               </div>
             ) : (
               <div className="empty-state glass-effect">
-                <p className="empty-message">No recommendations available.</p>
+                <p className="empty-message">
+                  {isWalletConnected
+                    ? 'No recommendations available. Try adjusting filters or searching.'
+                    : 'Connect your wallet to see personalized recommendations.'}
+                </p>
+                {!isWalletConnected && (
+                  <button className="connect-wallet-button" onClick={connectWallet}>
+                    Connect Wallet
+                  </button>
+                )}
               </div>
             )}
           </div>
