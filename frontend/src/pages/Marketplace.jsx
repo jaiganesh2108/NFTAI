@@ -1262,7 +1262,7 @@ const Marketplace = () => {
     try {
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
-      const contract = new ethers.Contract(contractAddress, AIModelNFTABI.abi, signer);
+      const contract = new ethers.Contract(contractAddress, AIModelNFTABI, signer);
       
       // Check if model is for sale
       if (!model.forSale) {
