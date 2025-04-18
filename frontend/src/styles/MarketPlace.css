@@ -478,7 +478,7 @@ body {
 
 .button-group {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 0.5rem;
 }
 
@@ -492,8 +492,6 @@ body {
   transition: box-shadow 0.2s ease;
 }
 
-.buy-button { background: var(--gradient-dark); }
-.buy-button:hover { box-shadow: var(--glow-purple); }
 .demo-button { background: linear-gradient(to right, #2196f3, #42a5f5); }
 .demo-button:hover { box-shadow: 0 0 15px rgba(33, 150, 243, 0.5); }
 .workflow-button { background: linear-gradient(to right, #7a78ff, #566bff); }

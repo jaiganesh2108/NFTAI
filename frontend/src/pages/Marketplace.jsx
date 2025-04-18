@@ -3,11 +3,12 @@ import { ethers } from 'ethers';
 import {
   Search, Filter, Star, Users, TrendingUp, Plus, ShoppingCart, Play, PlusCircle, Lock, AlertTriangle
 } from 'lucide-react';
+import axios from 'axios';
 import Navbar from '../components/Navbar.jsx';
 import ChatbotButton from '../pages/ChatbotButton.jsx';
 import "../styles/Marketplace.css";
 
-// Import images
+// Placeholder images (replace with actual paths)
 import image1 from '../assets/images/imgg1.jpg';
 import image2 from '../assets/images/imagg2.jpg';
 import image3 from '../assets/images/imgg3.jpg';
@@ -17,965 +18,62 @@ import image6 from '../assets/images/img6.jpg';
 import image12 from '../assets/images/img12.jpg';
 import image13 from '../assets/images/img13.jpg';
 
-
 // Contract ABI and address
-<<<<<<< HEAD
-const AIModelNFTABI = [/* Your ABI remains unchanged, omitted for brevity */];
-const contractAddress = "0x773b925f0cb2A38AC6BAA001A28dd6643c445C3d";
-=======
-const  AIModelNFTABI =[
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "to",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
-			}
-		],
-		"name": "approve",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
-			}
-		],
-		"name": "buyModel",
-		"outputs": [],
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"stateMutability": "nonpayable",
-		"type": "constructor"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "sender",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "address",
-				"name": "owner",
-				"type": "address"
-			}
-		],
-		"name": "ERC721IncorrectOwner",
-		"type": "error"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "operator",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
-			}
-		],
-		"name": "ERC721InsufficientApproval",
-		"type": "error"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "approver",
-				"type": "address"
-			}
-		],
-		"name": "ERC721InvalidApprover",
-		"type": "error"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "operator",
-				"type": "address"
-			}
-		],
-		"name": "ERC721InvalidOperator",
-		"type": "error"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "owner",
-				"type": "address"
-			}
-		],
-		"name": "ERC721InvalidOwner",
-		"type": "error"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "receiver",
-				"type": "address"
-			}
-		],
-		"name": "ERC721InvalidReceiver",
-		"type": "error"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "sender",
-				"type": "address"
-			}
-		],
-		"name": "ERC721InvalidSender",
-		"type": "error"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
-			}
-		],
-		"name": "ERC721NonexistentToken",
-		"type": "error"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "owner",
-				"type": "address"
-			}
-		],
-		"name": "OwnableInvalidOwner",
-		"type": "error"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "account",
-				"type": "address"
-			}
-		],
-		"name": "OwnableUnauthorizedAccount",
-		"type": "error"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "owner",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "approved",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
-			}
-		],
-		"name": "Approval",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "owner",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "operator",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"internalType": "bool",
-				"name": "approved",
-				"type": "bool"
-			}
-		],
-		"name": "ApprovalForAll",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "_fromTokenId",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "_toTokenId",
-				"type": "uint256"
-			}
-		],
-		"name": "BatchMetadataUpdate",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "seller",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "value",
-				"type": "uint256"
-			}
-		],
-		"name": "EtherTransferred",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "_tokenId",
-				"type": "uint256"
-			}
-		],
-		"name": "MetadataUpdate",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "newPrice",
-				"type": "uint256"
-			}
-		],
-		"name": "ModelPriceUpdated",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
-			},
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "previousOwner",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "newOwner",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "price",
-				"type": "uint256"
-			}
-		],
-		"name": "ModelSold",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"internalType": "string",
-				"name": "name",
-				"type": "string"
-			},
-			{
-				"indexed": false,
-				"internalType": "string",
-				"name": "ipfsHash",
-				"type": "string"
-			},
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "owner",
-				"type": "address"
-			}
-		],
-		"name": "ModelUploaded",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "previousOwner",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "newOwner",
-				"type": "address"
-			}
-		],
-		"name": "OwnershipTransferred",
-		"type": "event"
-	},
-	{
-		"inputs": [],
-		"name": "renounceOwnership",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "from",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "to",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
-			}
-		],
-		"name": "safeTransferFrom",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "from",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "to",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "bytes",
-				"name": "data",
-				"type": "bytes"
-			}
-		],
-		"name": "safeTransferFrom",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "operator",
-				"type": "address"
-			},
-			{
-				"internalType": "bool",
-				"name": "approved",
-				"type": "bool"
-			}
-		],
-		"name": "setApprovalForAll",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "from",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "to",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
-			}
-		],
-		"name": "Transfer",
-		"type": "event"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "from",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "to",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
-			}
-		],
-		"name": "transferFrom",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "newOwner",
-				"type": "address"
-			}
-		],
-		"name": "transferOwnership",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "newPrice",
-				"type": "uint256"
-			}
-		],
-		"name": "updateModelPrice",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "bool",
-				"name": "isPublic",
-				"type": "bool"
-			}
-		],
-		"name": "updateModelVisibility",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "_name",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_description",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_ipfsHash",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_tags",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_category",
-				"type": "string"
-			},
-			{
-				"internalType": "bool",
-				"name": "_isPublic",
-				"type": "bool"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_price",
-				"type": "uint256"
-			},
-			{
-				"internalType": "string",
-				"name": "_tokenURI",
-				"type": "string"
-			}
-		],
-		"name": "uploadModel",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "owner",
-				"type": "address"
-			}
-		],
-		"name": "balanceOf",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "getAllModels",
-		"outputs": [
-			{
-				"components": [
-					{
-						"internalType": "string",
-						"name": "name",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "description",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "ipfsHash",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "tags",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "category",
-						"type": "string"
-					},
-					{
-						"internalType": "bool",
-						"name": "isPublic",
-						"type": "bool"
-					},
-					{
-						"internalType": "uint256",
-						"name": "price",
-						"type": "uint256"
-					},
-					{
-						"internalType": "address",
-						"name": "owner",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "timestamp",
-						"type": "uint256"
-					},
-					{
-						"internalType": "bool",
-						"name": "forSale",
-						"type": "bool"
-					}
-				],
-				"internalType": "struct AIModelNFT.Model[]",
-				"name": "",
-				"type": "tuple[]"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
-			}
-		],
-		"name": "getApproved",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "owner",
-				"type": "address"
-			}
-		],
-		"name": "getModelsByOwner",
-		"outputs": [
-			{
-				"components": [
-					{
-						"internalType": "string",
-						"name": "name",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "description",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "ipfsHash",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "tags",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "category",
-						"type": "string"
-					},
-					{
-						"internalType": "bool",
-						"name": "isPublic",
-						"type": "bool"
-					},
-					{
-						"internalType": "uint256",
-						"name": "price",
-						"type": "uint256"
-					},
-					{
-						"internalType": "address",
-						"name": "owner",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "timestamp",
-						"type": "uint256"
-					},
-					{
-						"internalType": "bool",
-						"name": "forSale",
-						"type": "bool"
-					}
-				],
-				"internalType": "struct AIModelNFT.Model[]",
-				"name": "",
-				"type": "tuple[]"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "owner",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "operator",
-				"type": "address"
-			}
-		],
-		"name": "isApprovedForAll",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "models",
-		"outputs": [
-			{
-				"internalType": "string",
-				"name": "name",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "description",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "ipfsHash",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "tags",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "category",
-				"type": "string"
-			},
-			{
-				"internalType": "bool",
-				"name": "isPublic",
-				"type": "bool"
-			},
-			{
-				"internalType": "uint256",
-				"name": "price",
-				"type": "uint256"
-			},
-			{
-				"internalType": "address",
-				"name": "owner",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "timestamp",
-				"type": "uint256"
-			},
-			{
-				"internalType": "bool",
-				"name": "forSale",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "name",
-		"outputs": [
-			{
-				"internalType": "string",
-				"name": "",
-				"type": "string"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "owner",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
-			}
-		],
-		"name": "ownerOf",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "bytes4",
-				"name": "interfaceId",
-				"type": "bytes4"
-			}
-		],
-		"name": "supportsInterface",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "symbol",
-		"outputs": [
-			{
-				"internalType": "string",
-				"name": "",
-				"type": "string"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
-			}
-		],
-		"name": "tokenURI",
-		"outputs": [
-			{
-				"internalType": "string",
-				"name": "",
-				"type": "string"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	}
-] // You'll need to create this JSON file with the ABI
-const contractAddress = "0xAcEFD40AAE6F7AE01f75B4dD13848Eb37F2a05f7"; // Replace with your deployed contract address
->>>>>>> e55afa58a9d358258b9db99fd7241559bf3e12ca
+const AIModelNFTABI = [
+  {
+    "anonymous": false,
+    "inputs": [
+      {"indexed": true, "internalType": "uint256", "name": "modelId", "type": "uint256"},
+      {"indexed": false, "internalType": "string", "name": "name", "type": "string"},
+      {"indexed": false, "internalType": "string", "name": "ipfsHash", "type": "string"},
+      {"indexed": true, "internalType": "address", "name": "uploader", "type": "address"}
+    ],
+    "name": "ModelUploaded",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {"internalType": "string", "name": "_name", "type": "string"},
+      {"internalType": "string", "name": "_description", "type": "string"},
+      {"internalType": "string", "name": "_ipfsHash", "type": "string"},
+      {"internalType": "string", "name": "_tags", "type": "string"},
+      {"internalType": "string", "name": "_category", "type": "string"},
+      {"internalType": "bool", "name": "_isPublic", "type": "bool"},
+      {"internalType": "uint256", "name": "_price", "type": "uint256"}
+    ],
+    "name": "uploadModel",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getAllModels",
+    "outputs": [
+      {
+        "components": [
+          {"internalType": "string", "name": "name", "type": "string"},
+          {"internalType": "string", "name": "description", "type": "string"},
+          {"internalType": "string", "name": "ipfsHash", "type": "string"},
+          {"internalType": "string", "name": "tags", "type": "string"},
+          {"internalType": "string", "name": "category", "type": "string"},
+          {"internalType": "bool", "name": "isPublic", "type": "bool"},
+          {"internalType": "uint256", "name": "price", "type": "uint256"},
+          {"internalType": "address", "name": "uploader", "type": "address"},
+          {"internalType": "uint256", "name": "timestamp", "type": "uint256"}
+        ],
+        "internalType": "struct AIModelRegistry.Model[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+];
+const contractAddress = "0xF40613e98Ba82C88E581BBdDaDD5CD072AeDba19";
 
-// Debounce utility function
+// Debounce utility
 const debounce = (func, wait) => {
   let timeout;
   return (...args) => {
@@ -998,7 +96,6 @@ const Marketplace = () => {
   const [expandedModel, setExpandedModel] = useState(null);
   const [isWalletConnected, setIsWalletConnected] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [buyLoading, setBuyLoading] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
   const [transactionSuccess, setTransactionSuccess] = useState(null);
 
@@ -1024,25 +121,24 @@ const Marketplace = () => {
   };
 
   const transformBlockchainModel = (model, index) => {
-    const tagsArray = model.tags ? model.tags.split(',').map(tag => tag.trim()) : [];
+    const tagsArray = model[3] ? model[3].split(',').map(tag => tag.trim()) : [];
+    const priceInEth = parseFloat(ethers.formatEther(model[6]));
+    const priceInDollars = Math.floor(priceInEth * 200); // Matches backend conversion
     const randomRating = (4 + Math.random()).toFixed(1);
     const randomReviews = Math.floor(Math.random() * 300) + 1;
     const randomUsage = `${(Math.random() * 15).toFixed(1)}k`;
     const isTrending = Math.random() > 0.7;
-    const isNew = Number(model.timestamp) > (Date.now() / 1000 - 7 * 24 * 60 * 60);
-    const priceInEth = parseFloat(ethers.formatEther(model.price.toString()));
-    const priceInDollars = Math.floor(priceInEth * 2000);
-    const isNFT = true;
+    const isNew = Number(model[8]) > (Date.now() / 1000 - 7 * 24 * 60 * 60);
 
     return {
       id: index + 1,
       tokenId: index + 1,
-      name: model.name,
-      category: model.category || "Text Generation",
+      name: model[0],
+      category: model[4] || "Text Generation",
       tags: tagsArray.length > 0 ? tagsArray : allTags.slice(0, 3 + Math.floor(Math.random() * 4)),
-      description: model.description,
+      description: model[1],
       price: priceInDollars || 299,
-      priceInWei: model.price.toString(),
+      priceInWei: model[6].toString(),
       previousPrice: priceInDollars < 400 ? priceInDollars + 50 : priceInDollars,
       rating: parseFloat(randomRating),
       reviewCount: randomReviews,
@@ -1051,12 +147,12 @@ const Marketplace = () => {
       new: isNew,
       reputation: getRandomReputation(),
       image: getRandomImage(),
-      isNFT: isNFT,
-      forSale: model.forSale,
+      isNFT: !model[5], // isPublic = false means NFT
       blockchain: "Ethereum",
-      owner: model.owner,
-      ipfsHash: model.ipfsHash,
-      timestamp: Number(model.timestamp)
+      owner: model[7] ? `${model[7].slice(0, 6)}...${model[7].slice(-4)}` : null,
+      ipfsHash: model[2],
+      uploader: model[7],
+      timestamp: Number(model[8])
     };
   };
 
@@ -1066,46 +162,51 @@ const Marketplace = () => {
     try {
       if (window.ethereum) {
         const provider = new ethers.BrowserProvider(window.ethereum);
-        const signer = await provider.getSigner();
-        const contract = new ethers.Contract(contractAddress, AIModelNFTABI, signer);
+        const contract = new ethers.Contract(contractAddress, AIModelNFTABI, provider);
         const blockchainModels = await contract.getAllModels();
+        console.log("Raw blockchain models:", blockchainModels);
         const formattedModels = blockchainModels.map(transformBlockchainModel);
         setModels(formattedModels.length > 0 ? formattedModels : setDefaultModels());
+        // Sync models with backend
+        await axios.post('http://localhost:8000/sync_models', { models: formattedModels });
       } else {
-        setDefaultModels();
         setErrorMessage("MetaMask not detected. Please install MetaMask.");
+        setDefaultModels();
       }
     } catch (err) {
       console.error("Error fetching models:", err);
+      setErrorMessage(`Failed to load models from blockchain: ${err.message}`);
       setDefaultModels();
-      setErrorMessage("Failed to load models from blockchain.");
     } finally {
       setLoading(false);
     }
   };
 
   const setDefaultModels = () => {
-    setModels([
+    const defaults = [
       {
         id: 1, tokenId: 1, name: "NeuralText Pro", category: "Text Generation", tags: ["GPT", "Text", "Generative"],
-        description: "Advanced language model for creative writing.", price: 299, priceInWei: ethers.parseEther("0.1"),
+        description: "Advanced language model for creative writing.", price: 299, priceInWei: ethers.parseEther("1.495").toString(),
         previousPrice: 349, rating: 4.8, reviewCount: 256, usageCount: "13.2k", trending: true, new: false,
-        reputation: "High", image: image5, isNFT: true, forSale: true, blockchain: "Ethereum",
+        reputation: "High", image: image5, isNFT: true, blockchain: "Ethereum",
         owner: "0x1234...abcd", ipfsHash: "QmX5NZdH5aEwRVdrk1UjKXYoaKr1L8aCCaNZgxJfAxbUTo",
+        uploader: "0x1234567890abcdef1234567890abcdef12345678",
         timestamp: Math.floor(Date.now() / 1000) - 30 * 24 * 60 * 60
       },
-      // Other default models remain unchanged, omitted for brevity
-    ]);
+    ];
+    setModels(defaults);
+    return defaults;
   };
 
-  const logInteraction = async (modelId, interactionType) => {
+  const logInteraction = async (modelId, interactionType, searchTerm = null) => {
     if (!isWalletConnected) return;
     try {
       const userAddress = (await window.ethereum.request({ method: 'eth_accounts' }))[0];
-      await fetch('http://localhost:8000/log_interaction', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ user_address: userAddress, model_id: modelId, interaction_type: interactionType })
+      await axios.post('http://localhost:8000/log_interaction', {
+        user_address: userAddress,
+        model_id: modelId,
+        interaction_type: interactionType,
+        search_term: searchTerm
       });
     } catch (error) {
       console.error(`Error logging ${interactionType}:`, error);
@@ -1115,29 +216,25 @@ const Marketplace = () => {
   const fetchRecommendations = useCallback(async () => {
     setLoadingRecommendations(true);
     try {
-      if (!isWalletConnected) {
-        setRecommendedModels(models.filter(model => model.trending).slice(0, 4));
-        return;
+      let userAddress = null;
+      if (isWalletConnected) {
+        userAddress = (await window.ethereum.request({ method: 'eth_accounts' }))[0];
       }
-      const userAddress = (await window.ethereum.request({ method: 'eth_accounts' }))[0];
-      const response = await fetch('http://localhost:8000/recommend', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          user_address: userAddress,
-          preferred_categories: selectedCategory !== 'All' ? [selectedCategory] : null,
-          preferred_tags: selectedTags.length > 0 ? selectedTags : null,
-          price_range: priceRange,
-          top_n: 4,
-          search_term: searchTerm
-        })
+      const response = await axios.post('http://localhost:8000/recommend', {
+        user_address: userAddress,
+        preferred_categories: selectedCategory !== 'All' ? [selectedCategory] : null,
+        preferred_tags: selectedTags.length > 0 ? selectedTags : null,
+        price_range: priceRange,
+        top_n: 4,
+        search_term: searchTerm || null
       });
-      if (!response.ok) throw new Error('Failed to fetch recommendations');
-      const data = await response.json();
-      setRecommendedModels(data.recommendations.map(model => ({
+      const recommendations = response.data.recommendations.map(model => ({
         ...model,
         image: model.image || getRandomImage(),
-      })));
+        rating: model.rating || (4 + Math.random()).toFixed(1),
+        reviewCount: model.reviewCount || Math.floor(Math.random() * 300) + 1
+      }));
+      setRecommendedModels(recommendations);
     } catch (error) {
       console.error('Error fetching recommendations:', error);
       setRecommendedModels(models.filter(model => model.reputation === "High").slice(0, 4));
@@ -1206,6 +303,14 @@ const Marketplace = () => {
     try {
       if (window.ethereum) {
         await window.ethereum.request({ method: 'eth_requestAccounts' });
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        const network = await provider.getNetwork();
+        if (network.chainId !== BigInt(11155111)) { // Sepolia chain ID
+          await window.ethereum.request({
+            method: 'wallet_switchEthereumChain',
+            params: [{ chainId: '0xaa36a7' }],
+          });
+        }
         setIsWalletConnected(true);
         fetchModels();
       } else {
@@ -1228,42 +333,35 @@ const Marketplace = () => {
     setExpandedModel(null);
   };
 
-  const handleBuy = async (model) => {
+  const handleUploadModel = async (modelData) => {
     if (!isWalletConnected) {
       setErrorMessage("Please connect your wallet.");
       return;
     }
-    setBuyLoading(model.id);
-    setErrorMessage('');
-    setTransactionSuccess(null);
     try {
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
       const contract = new ethers.Contract(contractAddress, AIModelNFTABI, signer);
-      if (!model.forSale) throw new Error("Model not for sale.");
-      const userAddress = await signer.getAddress();
-      if (model.owner.toLowerCase() === userAddress.toLowerCase()) throw new Error("Cannot buy your own model.");
-      const tx = await contract.buyModel(model.tokenId, { value: BigInt(model.priceInWei) });
+      const tx = await contract.uploadModel(
+        modelData.name,
+        modelData.description,
+        modelData.ipfsHash,
+        modelData.tags.join(','),
+        modelData.category,
+        modelData.isPublic,
+        ethers.parseEther((modelData.price / 200).toString()) // Convert dollars to ETH
+      );
       setTransactionSuccess(`Transaction pending. Hash: ${tx.hash}`);
-      const receipt = await tx.wait();
-      setTransactionSuccess(`Model purchased successfully!`);
-      const updatedModels = [...models];
-      const modelIndex = updatedModels.findIndex(m => m.id === model.id);
-      if (modelIndex !== -1) {
-        updatedModels[modelIndex] = { ...updatedModels[modelIndex], owner: userAddress, forSale: false };
-        setModels(updatedModels);
-      }
-      logInteraction(model.id, 'purchase');
-      setTimeout(fetchModels, 3000);
+      await tx.wait();
+      setTransactionSuccess("Model uploaded successfully!");
+      fetchModels();
     } catch (error) {
-      setErrorMessage(error.message || "Transaction failed.");
-    } finally {
-      setBuyLoading(null);
+      setErrorMessage(`Failed to upload model: ${error.message}`);
     }
   };
 
   const handleDemo = (model) => {
-    logInteraction(model.id, 'demo');
+    logInteraction(model.id, 'view');
   };
 
   const handleAddToWorkflow = (model) => {
@@ -1271,7 +369,7 @@ const Marketplace = () => {
       setErrorMessage("Please connect your wallet.");
       return;
     }
-    logInteraction(model.id, 'workflow_add');
+    logInteraction(model.id, 'workflow');
   };
 
   const handleFavorite = (model) => {
@@ -1306,7 +404,12 @@ const Marketplace = () => {
             type="text"
             placeholder="Search AI models..."
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              if (isWalletConnected && e.target.value) {
+                logInteraction(0, 'search', e.target.value);
+              }
+            }}
             aria-label="Search models"
           />
         </div>
@@ -1443,7 +546,6 @@ const Marketplace = () => {
                           <Lock className="mr-1 h-3 w-3" /> NFT
                         </span>
                       )}
-                      {model.forSale && <span className="badge for-sale">For Sale</span>}
                     </div>
                   </div>
                   <div className="model-content">
@@ -1484,13 +586,13 @@ const Marketplace = () => {
                         </div>
                       </div>
                       <div className="expanded-section">
-                        <h4>Creator</h4>
-                        <p>{model.owner.substring(0, 6)}...{model.owner.substring(model.owner.length - 4)}</p>
+                        <h4>Uploader</h4>
+                        <p>{model.uploader}</p>
                       </div>
                       <div className="expanded-section">
                         <h4>Web3 Details</h4>
                         <p>Blockchain: {model.blockchain}</p>
-                        <p>Status: {model.forSale ? 'For Sale' : 'Not For Sale'}</p>
+                        <p>Owner: {model.owner}</p>
                       </div>
                       {model.ipfsHash && (
                         <div className="expanded-section">
@@ -1503,25 +605,6 @@ const Marketplace = () => {
                         <p><Users className="inline mr-1 h-4 w-4" /> {model.usageCount} users</p>
                       </div>
                       <div className="button-group">
-                        {model.forSale ? (
-                          <button
-                            className="action-button buy-button"
-                            onClick={() => handleBuy(model)}
-                            disabled={buyLoading === model.id}
-                          >
-                            {buyLoading === model.id ? (
-                              'Processing...'
-                            ) : (
-                              <>
-                                <ShoppingCart className="mr-2 h-4 w-4" /> Buy Now
-                              </>
-                            )}
-                          </button>
-                        ) : (
-                          <button className="action-button owned-button" disabled>
-                            <Lock className="mr-2 h-4 w-4" /> Not For Sale
-                          </button>
-                        )}
                         <button
                           className="action-button demo-button"
                           onClick={() => handleDemo(model)}
@@ -1589,7 +672,7 @@ const Marketplace = () => {
                         modelElement.scrollIntoView({ behavior: 'smooth' });
                         setExpandedModel(model.id);
                       }
-                      logInteraction(model.id, 'recommendation_click');
+                      logInteraction(model.id, 'view');
                     }}
                   >
                     View Model
