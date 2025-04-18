@@ -1327,7 +1327,7 @@ const Upload = () => {
                     onChange={(e) => setPrice(e.target.value)}
                     className="form-input"
                     min="0"
-                    step="0.0000000001"
+                    step="0.000000001"
                     placeholder="0"
                   />
                   <span className="token-suffix">ETH</span>
