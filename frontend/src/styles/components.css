@@ -152,19 +152,7 @@
   overflow: hidden;
   position: relative;
   min-height: 0;
-}
-
-.assistant-image {
-  width: 100%;
-  height: auto;
-  max-height: 450px;
-  object-fit: contain;
-  filter: brightness(1.1); /* Slight enhancement for clarity */
-  transition: transform 0.3s ease;
-}
-
-.assistant-image:hover {
-  transform: scale(1.02);
+  perspective: 1000px; /* Enable 3D perspective */
 }
 
 .model-container::before {
@@ -177,6 +165,80 @@
   background: radial-gradient(circle, rgba(107, 72, 255, 0.2) 0%, transparent 70%);
   animation: glow 8s infinite ease-in-out;
   z-index: 0;
+}
+
+/* 3D Animated Cubes */
+.model-container .cube {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  background: rgba(107, 72, 255, 0.3);
+  transform-style: preserve-3d;
+  animation: rotateCube 15s infinite linear;
+}
+
+.cube:nth-child(1) {
+  top: 20%;
+  left: 20%;
+  animation-delay: 0s;
+}
+
+.cube:nth-child(2) {
+  top: 60%;
+  left: 70%;
+  animation-delay: 5s;
+}
+
+.cube-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: rgba(107, 72, 255, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.cube .cube-face:nth-child(1) { transform: rotateY(0deg) translateZ(25px); }
+.cube .cube-face:nth-child(2) { transform: rotateY(90deg) translateZ(25px); }
+.cube .cube-face:nth-child(3) { transform: rotateY(180deg) translateZ(25px); }
+.cube .cube-face:nth-child(4) { transform: rotateY(270deg) translateZ(25px); }
+.cube .cube-face:nth-child(5) { transform: rotateX(90deg) translateZ(25px); }
+.cube .cube-face:nth-child(6) { transform: rotateX(-90deg) translateZ(25px); }
+
+/* Particles */
+.model-container .particle {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  animation: float 6s infinite ease-in-out;
+}
+
+.particle:nth-child(3) {
+  top: 10%;
+  left: 30%;
+  animation-delay: 1s;
+}
+
+.particle:nth-child(4) {
+  top: 70%;
+  left: 80%;
+  animation-delay: 3s;
+}
+
+.assistant-image {
+  width: 100%;
+  height: auto;
+  max-height: 450px;
+  object-fit: contain;
+  filter: brightness(1.1);
+  transition: transform 0.3s ease;
+  position: relative;
+  z-index: 2; /* Ensure image stays above animations */
+}
+
+.assistant-image:hover {
+  transform: scale(1.02);
 }
 
 /* Chat Area */
@@ -296,6 +358,16 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes rotateCube {
+  0% { transform: rotate3d(1, 1, 1, 0deg); }
+  100% { transform: rotate3d(1, 1, 1, 360deg); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
+
 /* Media Queries */
 @media (max-width: 768px) {
   .chatbot-card {
@@ -316,6 +388,11 @@
 
   .assistant-image {
     max-height: 350px;
+  }
+
+  .model-container .cube,
+  .model-container .particle {
+    display: none; /* Disable animations on smaller screens for performance */
   }
 
   .chat-area {
@@ -350,4 +427,104 @@
   .send-btn {
     font-size: 12px;
   }
+}
+
+/* Navbar Component Styles (Unchanged as requested) */
+.navbar {
+  background: #111827;
+  padding: 16px 40px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar-logo {
+  font-size: 24px;
+  font-weight: 700;
+  color: white;
+  background: linear-gradient(90deg, #a78bfa, #6366f1);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-decoration: none;
+  transition: transform 0.3s ease;
+}
+
+.navbar-logo:hover {
+  transform: scale(1.05);
+}
+
+.navbar-links {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-grow: 1;
+  justify-content: center;
+}
+
+.navbar-link {
+  color: #d1d5db;
+  text-decoration: none;
+  font-size: 16px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+.navbar-link:hover {
+  color: #a78bfa;
+  background-color: rgba(167, 139, 250, 0.1);
+}
+
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.btn-connect {
+  background: linear-gradient(90deg, #8b5cf6, #4f46e5);
+  color: white;
+}
+
+.btn-connect:hover {
+  box-shadow: 0 0 15px rgba(139, 92, 246, 0.5);
+  transform: scale(1.05);
+}
+
+.navbar-github {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgba(167, 139, 250, 0.1);
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.navbar-github:hover {
+  background-color: rgba(167, 139, 250, 0.3);
+  transform: scale(1.1);
+}
+
+.navbar-github svg {
+  transition: color 0.3s ease;
+}
+
+.navbar-github:hover svg {
+  color: #a78bfa;
 }

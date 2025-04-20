@@ -115,6 +115,19 @@ const ChatbotButton = () => {
           </div>
           <div className="chatbot-content">
             <div className="model-container">
+              {/* Add 3D cubes */}
+              <div className="cube">
+                <div className="cube-face"></div>
+                <div className="cube-face"></div>
+                <div className="cube-face"></div>
+                <div className="cube-face"></div>
+                <div className="cube-face"></div>
+                <div className="cube-face"></div>
+              </div>
+              <div className="cube"></div>
+              {/* Add particles */}
+              <div className="particle"></div>
+              <div className="particle"></div>
               <img
                 src={assistantImage}
                 alt="Starfire Assistant"
