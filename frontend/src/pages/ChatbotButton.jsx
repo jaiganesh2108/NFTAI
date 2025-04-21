@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { MessageCircle, X } from 'lucide-react';
 import '../styles/components.css';
 import assistantImage from '../assets/images/assistant1.png';
-
+{/*chatbot with png image*/}
 const ChatbotButton = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState('');
