@@ -8,6 +8,7 @@ import Navbar from '../components/Navbar.jsx';
 import ChatbotButton from '../pages/ChatbotButton.jsx';
 import "../styles/Marketplace.css";
 
+
 // Placeholder images (replace with actual paths)
 import image1 from '../assets/images/imgg1.jpg';
 import image2 from '../assets/images/imagg2.jpg';
@@ -351,32 +352,6 @@ const Marketplace = () => {
     setExpandedModel(null);
   };
 
-  const handleUploadModel = async (modelData) => {
-    if (!isWalletConnected) {
-      setErrorMessage("Please connect your wallet.");
-      return;
-    }
-    try {
-      const provider = new ethers.BrowserProvider(window.ethereum);
-      const signer = await provider.getSigner();
-      const contract = new ethers.Contract(contractAddress, AIModelNFTABI, signer);
-      const tx = await contract.uploadModel(
-        modelData.name,
-        modelData.description,
-        modelData.ipfsHash,
-        modelData.tags.join(','),
-        modelData.category,
-        modelData.isPublic,
-        ethers.parseEther((modelData.price / 200).toString())
-      );
-      setTransactionSuccess(`Transaction pending. Hash: ${tx.hash}`);
-      await tx.wait();
-      setTransactionSuccess("Model uploaded successfully!");
-      fetchModels();
-    } catch (error) {
-      setErrorMessage(`Failed to upload model: ${error.message}`);
-    }
-  };
 
   const handleDemo = (model) => {
     logInteraction(model.id, 'view');
